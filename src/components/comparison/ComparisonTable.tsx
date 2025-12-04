@@ -64,6 +64,14 @@ export function ComparisonTable() {
     });
   }, [comparisonResults, sortKey, sortDirection, filter]);
 
+  // Find the currently selected location's tax
+  const currentLocationTax = useMemo(() => {
+    const current = comparisonResults.find(
+      (r) => r.canton === taxpayer.canton && r.municipality === taxpayer.municipality
+    );
+    return current?.taxBreakdown.totalTax ?? 0;
+  }, [comparisonResults, taxpayer.canton, taxpayer.municipality]);
+
   const SortHeader = ({ label, sortKeyName }: { label: string; sortKeyName: SortKey }) => (
     <th
       className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
@@ -167,13 +175,24 @@ export function ComparisonTable() {
                     {formatPercentage(result.taxBreakdown.effectiveRate)}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
-                    {result.differenceFromCheapest > 0 ? (
-                      <span className="text-red-600">
-                        +{formatCurrency(result.differenceFromCheapest)}
-                      </span>
-                    ) : (
-                      <span className="text-green-600 font-medium">Lowest</span>
-                    )}
+                    {(() => {
+                      const diff = result.taxBreakdown.totalTax - currentLocationTax;
+                      if (isCurrentLocation) {
+                        return <span className="text-gray-500 font-medium">Current</span>;
+                      } else if (diff < 0) {
+                        return (
+                          <span className="text-green-600">
+                            {formatCurrency(diff)}
+                          </span>
+                        );
+                      } else {
+                        return (
+                          <span className="text-red-600">
+                            +{formatCurrency(diff)}
+                          </span>
+                        );
+                      }
+                    })()}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
                     {!isCurrentLocation && (
