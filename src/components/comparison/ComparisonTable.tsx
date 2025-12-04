@@ -179,19 +179,22 @@ export function ComparisonTable() {
                   <td className="px-4 py-3 whitespace-nowrap">
                     {(() => {
                       const diff = result.taxBreakdown.totalTax - currentLocationTax;
+                      const monthlyDiff = diff / 12;
                       if (isCurrentLocation) {
                         return <span className="text-gray-500 font-medium">Current</span>;
                       } else if (diff < 0) {
                         return (
-                          <span className="text-green-600">
-                            {formatCurrency(diff)}
-                          </span>
+                          <div className="text-green-600">
+                            <div>{formatCurrency(monthlyDiff)}/mo</div>
+                            <div className="text-xs">{formatCurrency(diff)}/yr</div>
+                          </div>
                         );
                       } else {
                         return (
-                          <span className="text-red-600">
-                            +{formatCurrency(diff)}
-                          </span>
+                          <div className="text-red-600">
+                            <div>+{formatCurrency(monthlyDiff)}/mo</div>
+                            <div className="text-xs">+{formatCurrency(diff)}/yr</div>
+                          </div>
                         );
                       }
                     })()}
