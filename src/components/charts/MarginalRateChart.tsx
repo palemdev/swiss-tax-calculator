@@ -18,7 +18,7 @@ import { calculateTax } from '../../services/taxCalculator';
 import { TAX_YEAR } from '../../data/constants';
 
 export function MarginalRateChart() {
-  const { results, taxpayer, income, deductions } = useTax();
+  const { results, taxpayer, income, deductions, enableDeductions } = useTax();
 
   // Generate data points for the chart
   const chartData = useMemo(() => {
@@ -39,6 +39,7 @@ export function MarginalRateChart() {
           taxpayer,
           income: { ...income, primaryIncome: inc, secondaryIncome: 0 },
           deductions,
+          enableDeductions,
         });
 
         dataPoints.push({
@@ -56,7 +57,7 @@ export function MarginalRateChart() {
     }
 
     return dataPoints;
-  }, [taxpayer, income, deductions, results]);
+  }, [taxpayer, income, deductions, enableDeductions, results]);
 
   const currentIncome = results?.grossIncome || 0;
 

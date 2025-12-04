@@ -9,7 +9,7 @@ import type {
 } from '../types';
 import { getFederalTaxBrackets } from '../data/federalTax';
 import { getCantonConfig, getMunicipalityById } from '../data/cantons';
-import { PILLAR_3A_LIMITS } from '../data/constants';
+import { PILLAR_3A_LIMITS, FEDERAL_DEDUCTION_LIMITS } from '../data/constants';
 
 // Calculate tax using progressive brackets
 function calculateTaxFromBrackets(taxableIncome: number, brackets: TaxBracket[]): { tax: number; marginalRate: number } {
@@ -35,13 +35,38 @@ function calculateTaxFromBrackets(taxableIncome: number, brackets: TaxBracket[])
   return { tax: Math.max(0, tax), marginalRate };
 }
 
-// Calculate deductions
+// Deduction limits type (matches CantonalDeductionLimits structure)
+type DeductionLimits = {
+  professionalExpenses: {
+    flatRate: number;
+    maxCommuting: number;
+    maxMeals: number;
+    maxOther: number;
+  };
+  insurancePremiums: {
+    single: number;
+    married: number;
+    perChild: number;
+  };
+  pillar3a: {
+    withPension: number;
+    withoutPension: number;
+  };
+  childDeduction: number;
+  childcareDeduction: number;
+  marriedDeduction: number;
+  socialDeductions: {
+    single: number;
+    married: number;
+  };
+};
+
+// Calculate deductions using provided limits
 export function calculateDeductions(
   input: TaxCalculationInput,
-  cantonConfig: CantonalTaxConfig
+  limits: DeductionLimits
 ): DeductionBreakdown {
   const { taxpayer, deductions } = input;
-  const limits = cantonConfig.deductionLimits;
   const isMarried = taxpayer.civilStatus === 'married';
 
   // Professional expenses
@@ -251,9 +276,19 @@ function calculateMarginalRate(
   return federalMarginal + adjustedCantonalMarginal;
 }
 
+// Empty deduction breakdown for when deductions are disabled
+const emptyDeductions: DeductionBreakdown = {
+  professionalExpenses: { commuting: 0, meals: 0, other: 0, total: 0 },
+  insurancePremiums: { health: 0, other: 0, total: 0 },
+  pensionContributions: { pillar2: 0, pillar3a: 0, total: 0 },
+  personalDeductions: { married: 0, children: 0, childcare: 0, social: 0, total: 0 },
+  otherDeductions: { debtInterest: 0, donations: 0, medical: 0, alimony: 0, other: 0, total: 0 },
+  totalDeductions: 0,
+};
+
 // Main tax calculation function
 export function calculateTax(input: TaxCalculationInput): TaxBreakdown {
-  const { taxpayer, income } = input;
+  const { taxpayer, income, enableDeductions } = input;
 
   // Get canton and municipality configs
   const cantonConfig = getCantonConfig(taxpayer.canton);
@@ -274,24 +309,32 @@ export function calculateTax(input: TaxCalculationInput): TaxBreakdown {
     income.rentalIncome +
     income.otherIncome;
 
-  // Calculate deductions
-  const deductions = calculateDeductions(input, cantonConfig);
+  // Calculate deductions (or use empty deductions if disabled)
+  let federalDeductions: DeductionBreakdown;
+  let cantonalDeductions: DeductionBreakdown;
 
-  // Calculate taxable income
-  // Note: Federal and cantonal taxable income may differ slightly, but we'll simplify
-  const taxableIncome = Math.max(0, grossIncome - deductions.totalDeductions);
+  if (enableDeductions) {
+    federalDeductions = calculateDeductions(input, FEDERAL_DEDUCTION_LIMITS);
+    cantonalDeductions = calculateDeductions(input, cantonConfig.deductionLimits);
+  } else {
+    federalDeductions = emptyDeductions;
+    cantonalDeductions = emptyDeductions;
+  }
+
+  const taxableIncomeFederal = Math.max(0, grossIncome - federalDeductions.totalDeductions);
+  const taxableIncomeCantonal = Math.max(0, grossIncome - cantonalDeductions.totalDeductions);
 
   // Calculate all tax components
-  const federalTax = calculateFederalTax(taxableIncome, isMarried);
-  const cantonalTax = calculateCantonalTax(taxableIncome, cantonConfig, isMarried);
-  const municipalTax = calculateMunicipalTax(taxableIncome, cantonConfig, municipality, isMarried);
+  const federalTax = calculateFederalTax(taxableIncomeFederal, isMarried);
+  const cantonalTax = calculateCantonalTax(taxableIncomeCantonal, cantonConfig, isMarried);
+  const municipalTax = calculateMunicipalTax(taxableIncomeCantonal, cantonConfig, municipality, isMarried);
 
   // Church tax - consider both spouses for married couples
-  let churchTax = calculateChurchTax(taxableIncome, cantonConfig, municipality, taxpayer.religion, isMarried);
+  const churchTax = calculateChurchTax(taxableIncomeCantonal, cantonConfig, municipality, taxpayer.religion, isMarried);
   if (isMarried && taxpayer.partnerReligion !== taxpayer.religion) {
     // If spouse has different religion, calculate their portion too
     const partnerChurchTax = calculateChurchTax(
-      taxableIncome / 2, // Simplification: split income
+      taxableIncomeCantonal / 2, // Simplification: split income
       cantonConfig,
       municipality,
       taxpayer.partnerReligion,
@@ -303,14 +346,16 @@ export function calculateTax(input: TaxCalculationInput): TaxBreakdown {
   // Total tax
   const totalTax = federalTax.taxAmount + cantonalTax.taxAmount + municipalTax.taxAmount + churchTax.taxAmount;
   const effectiveRate = grossIncome > 0 ? (totalTax / grossIncome) * 100 : 0;
-  const marginalRate = calculateMarginalRate(taxableIncome, cantonConfig, municipality, isMarried);
+  const marginalRate = calculateMarginalRate(taxableIncomeCantonal, cantonConfig, municipality, isMarried);
 
   return {
     grossIncome,
-    deductions,
-    totalDeductions: deductions.totalDeductions,
-    taxableIncomeFederal: taxableIncome,
-    taxableIncomeCantonal: taxableIncome,
+    deductions: cantonalDeductions,
+    deductionsFederal: federalDeductions,
+    totalDeductions: cantonalDeductions.totalDeductions,
+    totalDeductionsFederal: federalDeductions.totalDeductions,
+    taxableIncomeFederal,
+    taxableIncomeCantonal,
     federalTax,
     cantonalTax,
     municipalTax,

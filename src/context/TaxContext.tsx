@@ -56,6 +56,7 @@ interface TaxState {
   results: TaxBreakdown | null;
   comparisonResults: TaxComparisonResult[];
   isCalculating: boolean;
+  enableDeductions: boolean;
   showAdvancedDeductions: boolean;
 }
 
@@ -66,6 +67,7 @@ type TaxAction =
   | { type: 'SET_RESULTS'; payload: TaxBreakdown | null }
   | { type: 'SET_COMPARISON_RESULTS'; payload: TaxComparisonResult[] }
   | { type: 'SET_CALCULATING'; payload: boolean }
+  | { type: 'TOGGLE_DEDUCTIONS' }
   | { type: 'TOGGLE_ADVANCED_DEDUCTIONS' }
   | { type: 'RESET' };
 
@@ -76,6 +78,7 @@ const initialState: TaxState = {
   results: null,
   comparisonResults: [],
   isCalculating: false,
+  enableDeductions: false,
   showAdvancedDeductions: false,
 };
 
@@ -93,6 +96,8 @@ function taxReducer(state: TaxState, action: TaxAction): TaxState {
       return { ...state, comparisonResults: action.payload };
     case 'SET_CALCULATING':
       return { ...state, isCalculating: action.payload };
+    case 'TOGGLE_DEDUCTIONS':
+      return { ...state, enableDeductions: !state.enableDeductions };
     case 'TOGGLE_ADVANCED_DEDUCTIONS':
       return { ...state, showAdvancedDeductions: !state.showAdvancedDeductions };
     case 'RESET':
@@ -108,6 +113,7 @@ interface TaxContextValue extends TaxState {
   updateDeductions: (data: Partial<DeductionInputs>) => void;
   calculate: () => void;
   runComparison: () => void;
+  toggleDeductions: () => void;
   toggleAdvancedDeductions: () => void;
   reset: () => void;
 }
@@ -138,6 +144,7 @@ export function TaxProvider({ children }: { children: React.ReactNode }) {
         taxpayer: state.taxpayer,
         income: state.income,
         deductions: state.deductions,
+        enableDeductions: state.enableDeductions,
       };
 
       const results = calculateTax(input);
@@ -148,7 +155,7 @@ export function TaxProvider({ children }: { children: React.ReactNode }) {
     } finally {
       dispatch({ type: 'SET_CALCULATING', payload: false });
     }
-  }, [state.taxpayer, state.income, state.deductions]);
+  }, [state.taxpayer, state.income, state.deductions, state.enableDeductions]);
 
   const runComparison = useCallback(() => {
     dispatch({ type: 'SET_CALCULATING', payload: true });
@@ -159,6 +166,7 @@ export function TaxProvider({ children }: { children: React.ReactNode }) {
         taxpayer: state.taxpayer,
         income: state.income,
         deductions: state.deductions,
+        enableDeductions: state.enableDeductions,
       };
 
       const results: TaxComparisonResult[] = [];
@@ -204,7 +212,11 @@ export function TaxProvider({ children }: { children: React.ReactNode }) {
     } finally {
       dispatch({ type: 'SET_CALCULATING', payload: false });
     }
-  }, [state.taxpayer, state.income, state.deductions]);
+  }, [state.taxpayer, state.income, state.deductions, state.enableDeductions]);
+
+  const toggleDeductions = useCallback(() => {
+    dispatch({ type: 'TOGGLE_DEDUCTIONS' });
+  }, []);
 
   const toggleAdvancedDeductions = useCallback(() => {
     dispatch({ type: 'TOGGLE_ADVANCED_DEDUCTIONS' });
@@ -221,7 +233,7 @@ export function TaxProvider({ children }: { children: React.ReactNode }) {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [state.taxpayer, state.income, state.deductions, calculate]);
+  }, [state.taxpayer, state.income, state.deductions, state.enableDeductions, calculate]);
 
   const value: TaxContextValue = {
     ...state,
@@ -230,6 +242,7 @@ export function TaxProvider({ children }: { children: React.ReactNode }) {
     updateDeductions,
     calculate,
     runComparison,
+    toggleDeductions,
     toggleAdvancedDeductions,
     reset,
   };

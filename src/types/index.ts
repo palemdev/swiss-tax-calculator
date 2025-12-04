@@ -124,6 +124,7 @@ export interface TaxCalculationInput {
   taxpayer: TaxpayerProfile;
   income: IncomeDetails;
   deductions: DeductionInputs;
+  enableDeductions: boolean;
 }
 
 // ============================================
@@ -176,7 +177,9 @@ export interface TaxLevelResult {
 export interface TaxBreakdown {
   grossIncome: number;
   deductions: DeductionBreakdown;
+  deductionsFederal: DeductionBreakdown;
   totalDeductions: number;
+  totalDeductionsFederal: number;
   taxableIncomeFederal: number;
   taxableIncomeCantonal: number;
 

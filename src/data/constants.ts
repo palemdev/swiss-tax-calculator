@@ -20,18 +20,12 @@ export const FEDERAL_TAX_THRESHOLDS = {
   maxMarginalRate: 11.5, // Maximum federal marginal rate
 };
 
-// Default professional expense deductions (federal)
-export const FEDERAL_PROFESSIONAL_DEDUCTIONS = {
-  flatRate: 2000,
-  maxCommuting: 3000,
-  maxMeals: 3200,
-};
-
-// Common deduction defaults
-export const DEFAULT_DEDUCTION_LIMITS = {
+// Federal deduction limits (used for calculating federal taxable income)
+// These are consistent across all cantons for federal tax calculation
+export const FEDERAL_DEDUCTION_LIMITS = {
   professionalExpenses: {
     flatRate: 2000,
-    maxCommuting: 5000,
+    maxCommuting: 3000,
     maxMeals: 3200,
     maxOther: 2000,
   },
@@ -41,9 +35,13 @@ export const DEFAULT_DEDUCTION_LIMITS = {
     perChild: 1350,
   },
   pillar3a: PILLAR_3A_LIMITS,
-  childDeduction: 6600, // Federal child deduction
-  childcareDeduction: 25000, // Federal max
-  marriedDeduction: 2700, // Federal married couple deduction
+  childDeduction: 6600,
+  childcareDeduction: 25000,
+  marriedDeduction: 2700,
+  socialDeductions: {
+    single: 0,
+    married: 0,
+  },
 };
 
 // Currency formatting

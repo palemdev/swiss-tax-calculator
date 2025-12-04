@@ -7,7 +7,7 @@ import { Card } from '../common/Card';
 import { PILLAR_3A_LIMITS } from '../../data/constants';
 
 export function DeductionsForm() {
-  const { deductions, updateDeductions, showAdvancedDeductions, toggleAdvancedDeductions } = useTax();
+  const { deductions, updateDeductions, enableDeductions, toggleDeductions, showAdvancedDeductions, toggleAdvancedDeductions } = useTax();
 
   const maxPillar3a = deductions.hasEmployerPension
     ? PILLAR_3A_LIMITS.withPension
@@ -18,24 +18,43 @@ export function DeductionsForm() {
       title="Deductions"
       subtitle="Reduce your taxable income"
       headerAction={
-        <button
-          onClick={toggleAdvancedDeductions}
-          className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900"
-        >
-          {showAdvancedDeductions ? (
-            <>
-              <ChevronUp className="w-4 h-4" />
-              Less options
-            </>
-          ) : (
-            <>
-              <ChevronDown className="w-4 h-4" />
-              More options
-            </>
-          )}
-        </button>
+        enableDeductions && (
+          <button
+            onClick={toggleAdvancedDeductions}
+            className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900"
+          >
+            {showAdvancedDeductions ? (
+              <>
+                <ChevronUp className="w-4 h-4" />
+                Less options
+              </>
+            ) : (
+              <>
+                <ChevronDown className="w-4 h-4" />
+                More options
+              </>
+            )}
+          </button>
+        )
       }
     >
+      <div className="mb-6">
+        <Toggle
+          label="Enable deductions"
+          checked={enableDeductions}
+          onChange={() => toggleDeductions()}
+          description="Apply tax deductions to reduce taxable income"
+        />
+      </div>
+
+      {!enableDeductions && (
+        <p className="text-sm text-gray-500 italic">
+          Enable deductions above to configure tax deductions.
+        </p>
+      )}
+
+      {enableDeductions && (
+        <>
       {/* Professional Expenses */}
       <div className="mb-6">
         <h4 className="text-sm font-semibold text-gray-700 mb-3 pb-2 border-b">
@@ -180,6 +199,8 @@ export function DeductionsForm() {
               />
             </div>
           </div>
+        </>
+      )}
         </>
       )}
     </Card>
