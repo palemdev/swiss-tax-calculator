@@ -72,6 +72,7 @@ export function TaxpayerForm() {
           onChange={(value) => updateTaxpayer({ numberOfChildren: Math.max(0, Math.floor(value)) })}
           min={0}
           max={10}
+          placeholder="0"
           tooltip="Children under 18 or in education qualify for deductions"
         />
 

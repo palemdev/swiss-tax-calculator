@@ -13,6 +13,7 @@ interface InputProps {
   tooltip?: string;
   disabled?: boolean;
   className?: string;
+  placeholder?: string;
 }
 
 export function Input({
@@ -26,12 +27,15 @@ export function Input({
   tooltip,
   disabled = false,
   className = '',
+  placeholder,
 }: InputProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value;
     const numValue = parseFloat(rawValue) || 0;
     onChange(numValue);
   };
+
+  const displayValue = placeholder !== undefined && value === 0 ? '' : value;
 
   return (
     <div className={`mb-4 ${className}`}>
@@ -54,12 +58,13 @@ export function Input({
         )}
         <input
           type="number"
-          value={value}
+          value={displayValue}
           onChange={handleChange}
           min={min}
           max={max}
           step={step}
           disabled={disabled}
+          placeholder={placeholder}
           className={`
             w-full px-3 py-2 border border-gray-300 rounded-lg
             focus:ring-2 focus:ring-red-500 focus:border-red-500
