@@ -14,8 +14,8 @@ import { TAX_YEAR } from '../data/constants';
 // Initial state values
 const initialTaxpayer: TaxpayerProfile = {
   civilStatus: 'single',
-  canton: 'ZH',
-  municipality: 'zh-zurich',
+  canton: 'ZG',
+  municipality: 'zg-zug',
   religion: 'none',
   partnerReligion: 'none',
   numberOfChildren: 0,
@@ -23,7 +23,7 @@ const initialTaxpayer: TaxpayerProfile = {
 };
 
 const initialIncome: IncomeDetails = {
-  primaryIncome: 100000,
+  primaryIncome: 150000,
   secondaryIncome: 0,
   selfEmploymentIncome: 0,
   investmentIncome: 0,
