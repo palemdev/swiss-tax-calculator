@@ -3,16 +3,16 @@ import type { TaxBracket } from '../types';
 // Federal Tax Brackets 2025 - Single Tariff (Grundtarif)
 export const federalTaxBracketsSingle2025: TaxBracket[] = [
   { minIncome: 0, maxIncome: 18500, baseAmount: 0, rate: 0 },
-  { minIncome: 18500, maxIncome: 32000, baseAmount: 25.41, rate: 0.77 },
-  { minIncome: 32000, maxIncome: 43600, baseAmount: 129.36, rate: 0.88 },
-  { minIncome: 43600, maxIncome: 58100, baseAmount: 231.84, rate: 2.64 },
-  { minIncome: 58100, maxIncome: 76200, baseAmount: 614.97, rate: 2.97 },
-  { minIncome: 76200, maxIncome: 79200, baseAmount: 1155.49, rate: 5.94 },
-  { minIncome: 79200, maxIncome: 108900, baseAmount: 1333.69, rate: 6.60 },
-  { minIncome: 108900, maxIncome: 141600, baseAmount: 3277.60, rate: 8.80 },
-  { minIncome: 141600, maxIncome: 185000, baseAmount: 6157.40, rate: 11.00 },
-  { minIncome: 185000, maxIncome: 793400, baseAmount: 10933.60, rate: 13.20 },
-  { minIncome: 793400, maxIncome: null, baseAmount: 91241.00, rate: 11.50 },
+  { minIncome: 18500, maxIncome: 33200, baseAmount: 25.41, rate: 0.77 },
+  { minIncome: 33200, maxIncome: 43500, baseAmount: 138.60, rate: 0.88 },
+  { minIncome: 43500, maxIncome: 58000, baseAmount: 229.20, rate: 2.64 },
+  { minIncome: 58000, maxIncome: 76100, baseAmount: 612.00, rate: 2.97 },
+  { minIncome: 76100, maxIncome: 82000, baseAmount: 1149.55, rate: 5.94 },
+  { minIncome: 82000, maxIncome: 108800, baseAmount: 1500.00, rate: 6.60 },
+  { minIncome: 108800, maxIncome: 141500, baseAmount: 3268.80, rate: 8.80 },
+  { minIncome: 141500, maxIncome: 184900, baseAmount: 6146.40, rate: 11.00 },
+  { minIncome: 184900, maxIncome: 793300, baseAmount: 10920.40, rate: 13.20 },
+  { minIncome: 793300, maxIncome: null, baseAmount: 91229.20, rate: 11.50 },
 ];
 
 // Federal Tax Brackets 2025 - Married Tariff (Verheiratetentarif)

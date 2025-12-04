@@ -157,14 +157,31 @@ export function calculateDeductions(
   };
 }
 
+// Round down to nearest 5 Rappen (0.05 CHF)
+function roundToNearest5Rappen(amount: number): number {
+  return Math.floor(amount * 20) / 20;
+}
+
 // Calculate federal tax
 export function calculateFederalTax(
   taxableIncome: number,
-  isMarried: boolean
+  isMarried: boolean,
+  numberOfChildren: number = 0
 ): TaxLevelResult {
   const tariff = isMarried ? 'married' : 'single';
   const brackets = getFederalTaxBrackets(tariff);
-  const { tax } = calculateTaxFromBrackets(taxableIncome, brackets);
+
+  // Round taxable income down to nearest 100 CHF for bracket lookup
+  const roundedIncome = Math.floor(taxableIncome / 100) * 100;
+
+  const { tax: rawTax } = calculateTaxFromBrackets(roundedIncome, brackets);
+
+  // Reduce by CHF 263 per child
+  const childReduction = numberOfChildren * 263;
+  const taxAfterChildReduction = Math.max(0, rawTax - childReduction);
+
+  // Round down to nearest 5 Rappen
+  const tax = roundToNearest5Rappen(taxAfterChildReduction);
 
   return {
     taxableIncome,
@@ -325,7 +342,7 @@ export function calculateTax(input: TaxCalculationInput): TaxBreakdown {
   const taxableIncomeCantonal = Math.max(0, grossIncome - cantonalDeductions.totalDeductions);
 
   // Calculate all tax components
-  const federalTax = calculateFederalTax(taxableIncomeFederal, isMarried);
+  const federalTax = calculateFederalTax(taxableIncomeFederal, isMarried, taxpayer.numberOfChildren);
   const cantonalTax = calculateCantonalTax(taxableIncomeCantonal, cantonConfig, isMarried);
   const municipalTax = calculateMunicipalTax(taxableIncomeCantonal, cantonConfig, municipality, isMarried);
 
