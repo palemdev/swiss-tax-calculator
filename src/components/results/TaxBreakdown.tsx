@@ -31,7 +31,7 @@ function TaxRow({ label, amount, rate, multiplier, color, isTotal }: TaxRowProps
       </div>
       <div className="text-right">
         <span className={`font-medium ${isTotal ? 'text-lg' : ''}`}>
-          {formatCurrency(amount)}
+          {formatCurrency(amount, true)}
         </span>
         {rate !== undefined && (
           <span className="text-xs text-gray-500 ml-2">({formatPercentage(rate)})</span>
@@ -61,25 +61,25 @@ export function TaxBreakdown() {
       <div className="mb-4 pb-4 border-b border-gray-200">
         <div className="flex justify-between text-sm text-gray-600">
           <span>Gross Income</span>
-          <span className="font-medium">{formatCurrency(results.grossIncome)}</span>
+          <span className="font-medium">{formatCurrency(results.grossIncome, true)}</span>
         </div>
         <div className="flex justify-between text-sm text-gray-600 mt-1">
           <span>Federal Deductions</span>
-          <span className="font-medium text-green-600">-{formatCurrency(results.totalDeductionsFederal)}</span>
+          <span className="font-medium text-green-600">-{formatCurrency(results.totalDeductionsFederal, true)}</span>
         </div>
         <div className="flex justify-between text-sm font-medium text-gray-900 mt-2 pt-2 border-t border-gray-100">
           <span>Federal Taxable Income</span>
-          <span>{formatCurrency(results.taxableIncomeFederal)}</span>
+          <span>{formatCurrency(results.taxableIncomeFederal, true)}</span>
         </div>
         {results.taxableIncomeCantonal !== results.taxableIncomeFederal && (
           <>
             <div className="flex justify-between text-sm text-gray-600 mt-2">
               <span>Cantonal Deductions</span>
-              <span className="font-medium text-green-600">-{formatCurrency(results.totalDeductions)}</span>
+              <span className="font-medium text-green-600">-{formatCurrency(results.totalDeductions, true)}</span>
             </div>
             <div className="flex justify-between text-sm font-medium text-gray-900 mt-1">
               <span>Cantonal Taxable Income</span>
-              <span>{formatCurrency(results.taxableIncomeCantonal)}</span>
+              <span>{formatCurrency(results.taxableIncomeCantonal, true)}</span>
             </div>
           </>
         )}
