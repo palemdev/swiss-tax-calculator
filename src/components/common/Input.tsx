@@ -1,5 +1,6 @@
 
 import { Info } from 'lucide-react';
+import { useState } from 'react';
 
 interface InputProps {
   label: string;
@@ -80,15 +81,76 @@ interface CurrencyInputProps {
 }
 
 export function CurrencyInput({ label, value, onChange, tooltip, disabled }: CurrencyInputProps) {
+  const [displayValue, setDisplayValue] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
+
+  const formatNumberWithCommas = (str: string): string => {
+    // Remove all non-digit characters
+    const cleaned = str.replace(/\D/g, '');
+    if (cleaned === '' || cleaned === '0') return '';
+
+    // Add commas
+    return parseInt(cleaned, 10).toLocaleString('en-US');
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+
+    // Remove all non-digit characters for parsing
+    const rawValue = inputValue.replace(/\D/g, '');
+
+    // Format with commas for display
+    const formatted = formatNumberWithCommas(rawValue);
+    setDisplayValue(formatted);
+
+    // Parse to number and update parent
+    const numValue = rawValue === '' ? 0 : parseInt(rawValue, 10);
+    onChange(numValue);
+  };
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
+
+  const currentDisplayValue = displayValue || (value === 0 ? '' : value.toLocaleString('en-US'));
+
   return (
-    <Input
-      label={label}
-      value={value}
-      onChange={onChange}
-      type="currency"
-      step={100}
-      tooltip={tooltip}
-      disabled={disabled}
-    />
+    <div className="mb-4">
+      <label className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
+        {label}
+        {tooltip && (
+          <span className="group relative">
+            <Info className="w-4 h-4 text-gray-400 cursor-help" />
+            <span className="absolute left-0 bottom-full mb-2 hidden group-hover:block w-64 p-2 text-xs bg-gray-900 text-white rounded shadow-lg z-10">
+              {tooltip}
+            </span>
+          </span>
+        )}
+      </label>
+      <div className="relative">
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">
+          CHF
+        </span>
+        <input
+          type="text"
+          inputMode="numeric"
+          value={currentDisplayValue}
+          onChange={handleChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          disabled={disabled}
+          className="
+            w-full px-3 py-2 border border-gray-300 rounded-lg
+            focus:ring-2 focus:ring-red-500 focus:border-red-500
+            disabled:bg-gray-100 disabled:cursor-not-allowed
+            pl-12
+          "
+        />
+      </div>
+    </div>
   );
 }
