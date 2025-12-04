@@ -37,7 +37,7 @@ export function MarginalRateChart() {
         const result = calculateTax({
           year: TAX_YEAR,
           taxpayer,
-          income: { ...income, primaryIncome: inc, secondaryIncome: 0 },
+          income: { grossIncome: inc },
           deductions,
           enableDeductions,
         });

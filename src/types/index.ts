@@ -84,12 +84,7 @@ export interface TaxpayerProfile {
 }
 
 export interface IncomeDetails {
-  primaryIncome: number;
-  secondaryIncome: number;
-  selfEmploymentIncome: number;
-  investmentIncome: number;
-  rentalIncome: number;
-  otherIncome: number;
+  grossIncome: number;
 }
 
 export interface DeductionInputs {

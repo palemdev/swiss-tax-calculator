@@ -5,16 +5,16 @@ import { StatCard } from '../common/Card';
 import { formatCurrency, formatPercentage } from '../../utils/formatters';
 
 export function TaxSummary() {
-  const { results } = useTax();
+  const { results, enableDeductions } = useTax();
 
   if (!results) {
     return (
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className={`grid grid-cols-2 ${enableDeductions ? 'lg:grid-cols-5' : 'lg:grid-cols-4'} gap-4`}>
         <StatCard label="Total Tax" value="--" color="red" />
         <StatCard label="Net Income" value="--" color="green" />
         <StatCard label="Effective Rate" value="--" color="blue" />
         <StatCard label="Max Rent" value="--" color="amber" />
-        <StatCard label="Total Deductions" value="--" color="purple" />
+        {enableDeductions && <StatCard label="Total Deductions" value="--" color="purple" />}
       </div>
     );
   }
@@ -22,7 +22,7 @@ export function TaxSummary() {
   const maxRent = (results.netIncome / 12) * 0.3;
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+    <div className={`grid grid-cols-2 ${enableDeductions ? 'lg:grid-cols-5' : 'lg:grid-cols-4'} gap-4`}>
       <StatCard
         label="Total Tax"
         value={formatCurrency(results.totalTax)}
@@ -51,13 +51,15 @@ export function TaxSummary() {
         color="amber"
         icon={<Home className="w-5 h-5 text-amber-500" />}
       />
-      <StatCard
-        label="Total Deductions"
-        value={formatCurrency(results.totalDeductions)}
-        subValue="Tax savings applied"
-        color="purple"
-        icon={<TrendingDown className="w-5 h-5 text-purple-500" />}
-      />
+      {enableDeductions && (
+        <StatCard
+          label="Total Deductions"
+          value={formatCurrency(results.totalDeductions)}
+          subValue="Tax savings applied"
+          color="purple"
+          icon={<TrendingDown className="w-5 h-5 text-purple-500" />}
+        />
+      )}
     </div>
   );
 }

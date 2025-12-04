@@ -23,12 +23,7 @@ const initialTaxpayer: TaxpayerProfile = {
 };
 
 const initialIncome: IncomeDetails = {
-  primaryIncome: 150000,
-  secondaryIncome: 0,
-  selfEmploymentIncome: 0,
-  investmentIncome: 0,
-  rentalIncome: 0,
-  otherIncome: 0,
+  grossIncome: 150000,
 };
 
 const initialDeductions: DeductionInputs = {

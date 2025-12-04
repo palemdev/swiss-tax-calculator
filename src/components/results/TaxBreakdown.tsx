@@ -42,7 +42,7 @@ function TaxRow({ label, amount, rate, multiplier, color, isTotal }: TaxRowProps
 }
 
 export function TaxBreakdown() {
-  const { results, taxpayer } = useTax();
+  const { results, taxpayer, enableDeductions } = useTax();
 
   if (!results) {
     return (
@@ -63,24 +63,28 @@ export function TaxBreakdown() {
           <span>Gross Income</span>
           <span className="font-medium">{formatCurrency(results.grossIncome, true)}</span>
         </div>
-        <div className="flex justify-between text-sm text-gray-600 mt-1">
-          <span>Federal Deductions</span>
-          <span className="font-medium text-green-600">-{formatCurrency(results.totalDeductionsFederal, true)}</span>
-        </div>
-        <div className="flex justify-between text-sm font-medium text-gray-900 mt-2 pt-2 border-t border-gray-100">
-          <span>Federal Taxable Income</span>
-          <span>{formatCurrency(results.taxableIncomeFederal, true)}</span>
-        </div>
-        {results.taxableIncomeCantonal !== results.taxableIncomeFederal && (
+        {enableDeductions && (
           <>
-            <div className="flex justify-between text-sm text-gray-600 mt-2">
-              <span>Cantonal Deductions</span>
-              <span className="font-medium text-green-600">-{formatCurrency(results.totalDeductions, true)}</span>
+            <div className="flex justify-between text-sm text-gray-600 mt-1">
+              <span>Federal Deductions</span>
+              <span className="font-medium text-green-600">-{formatCurrency(results.totalDeductionsFederal, true)}</span>
             </div>
-            <div className="flex justify-between text-sm font-medium text-gray-900 mt-1">
-              <span>Cantonal Taxable Income</span>
-              <span>{formatCurrency(results.taxableIncomeCantonal, true)}</span>
+            <div className="flex justify-between text-sm font-medium text-gray-900 mt-2 pt-2 border-t border-gray-100">
+              <span>Federal Taxable Income</span>
+              <span>{formatCurrency(results.taxableIncomeFederal, true)}</span>
             </div>
+            {results.taxableIncomeCantonal !== results.taxableIncomeFederal && (
+              <>
+                <div className="flex justify-between text-sm text-gray-600 mt-2">
+                  <span>Cantonal Deductions</span>
+                  <span className="font-medium text-green-600">-{formatCurrency(results.totalDeductions, true)}</span>
+                </div>
+                <div className="flex justify-between text-sm font-medium text-gray-900 mt-1">
+                  <span>Cantonal Taxable Income</span>
+                  <span>{formatCurrency(results.taxableIncomeCantonal, true)}</span>
+                </div>
+              </>
+            )}
           </>
         )}
       </div>

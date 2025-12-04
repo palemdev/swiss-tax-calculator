@@ -317,14 +317,8 @@ export function calculateTax(input: TaxCalculationInput): TaxBreakdown {
 
   const isMarried = taxpayer.civilStatus === 'married';
 
-  // Calculate gross income
-  const grossIncome =
-    income.primaryIncome +
-    income.secondaryIncome +
-    income.selfEmploymentIncome +
-    income.investmentIncome +
-    income.rentalIncome +
-    income.otherIncome;
+  // Get gross income
+  const grossIncome = income.grossIncome;
 
   // Calculate deductions (or use empty deductions if disabled)
   let federalDeductions: DeductionBreakdown;
