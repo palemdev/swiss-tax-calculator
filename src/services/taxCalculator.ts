@@ -200,7 +200,7 @@ export function calculateCantonalTax(
 ): TaxLevelResult {
   const brackets = isMarried ? cantonConfig.tariffs.married : cantonConfig.tariffs.single;
   const { tax: baseTax } = calculateTaxFromBrackets(taxableIncome, brackets);
-  const taxAmount = baseTax * (cantonConfig.taxMultiplier / 100);
+  const taxAmount = roundToNearest5Rappen(baseTax * (cantonConfig.taxMultiplier / 100));
 
   return {
     taxableIncome,
@@ -220,7 +220,7 @@ export function calculateMunicipalTax(
 ): TaxLevelResult {
   const brackets = isMarried ? cantonConfig.tariffs.married : cantonConfig.tariffs.single;
   const { tax: baseTax } = calculateTaxFromBrackets(taxableIncome, brackets);
-  const taxAmount = baseTax * (municipality.taxMultiplier / 100);
+  const taxAmount = roundToNearest5Rappen(baseTax * (municipality.taxMultiplier / 100));
 
   return {
     taxableIncome,
@@ -261,7 +261,7 @@ export function calculateChurchTax(
     churchMultiplier = municipality.churchTaxMultipliers.christCatholic;
   }
 
-  const taxAmount = baseTax * (churchMultiplier / 100);
+  const taxAmount = roundToNearest5Rappen(baseTax * (churchMultiplier / 100));
 
   return {
     taxableIncome,
