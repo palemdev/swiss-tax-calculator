@@ -23,14 +23,14 @@ export function TaxSummary() {
       <StatCard
         label="Total Tax"
         value={formatCurrency(results.totalTax)}
-        subValue={`${formatPercentage(results.effectiveRate)} of gross`}
+        subValue={`${formatPercentage(results.effectiveRate)} of gross · ${formatCurrency(results.totalTax / 12)} / mo`}
         color="red"
         icon={<Wallet className="w-5 h-5 text-red-500" />}
       />
       <StatCard
         label="Net Income"
         value={formatCurrency(results.netIncome)}
-        subValue={`After all taxes`}
+        subValue={`After all taxes · ${formatCurrency(results.netIncome / 12)} / mo`}
         color="green"
         icon={<PiggyBank className="w-5 h-5 text-green-500" />}
       />
