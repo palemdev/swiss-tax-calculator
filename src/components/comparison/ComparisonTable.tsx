@@ -23,10 +23,12 @@ export function ComparisonTable() {
   };
 
   const sortedResults = useMemo(() => {
+    const filterLower = filter.toLowerCase();
     const filtered = comparisonResults.filter(
       (r) =>
-        r.municipalityName.toLowerCase().includes(filter.toLowerCase()) ||
-        r.cantonName.toLowerCase().includes(filter.toLowerCase())
+        r.municipalityName.toLowerCase().includes(filterLower) ||
+        r.cantonName.toLowerCase().includes(filterLower) ||
+        r.canton.toLowerCase() === filterLower
     );
 
     return [...filtered].sort((a, b) => {
