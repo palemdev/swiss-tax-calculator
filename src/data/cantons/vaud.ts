@@ -1,12 +1,12 @@
 import type { CantonalTaxConfig, Municipality } from '../../types';
 
-// Vaud Canton Tax Configuration 2024
+// Vaud Canton Tax Configuration 2025
 export const vaudConfig: CantonalTaxConfig = {
   cantonCode: 'VD',
   cantonName: 'Vaud',
   cantonNameDe: 'Waadt',
   cantonNameFr: 'Vaud',
-  year: 2024,
+  year: 2025,
   taxMultiplier: 154.5, // Cantonal coefficient
 
   tariffs: {

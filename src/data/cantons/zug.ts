@@ -1,13 +1,13 @@
 import type { CantonalTaxConfig, Municipality } from '../../types';
 
-// Zug Canton Tax Configuration 2024
+// Zug Canton Tax Configuration 2025
 // Known for very low taxes
 export const zugConfig: CantonalTaxConfig = {
   cantonCode: 'ZG',
   cantonName: 'Zug',
   cantonNameDe: 'Zug',
   cantonNameFr: 'Zoug',
-  year: 2024,
+  year: 2025,
   taxMultiplier: 82, // Low cantonal multiplier
 
   tariffs: {

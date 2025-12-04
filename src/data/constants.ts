@@ -1,6 +1,6 @@
-// Swiss Tax System Constants for 2024
+// Swiss Tax System Constants for 2025
 
-export const TAX_YEAR = 2024;
+export const TAX_YEAR = 2025;
 
 // Pillar 3a contribution limits
 export const PILLAR_3A_LIMITS = {

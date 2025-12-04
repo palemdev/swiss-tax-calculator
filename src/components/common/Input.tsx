@@ -82,7 +82,7 @@ interface CurrencyInputProps {
 
 export function CurrencyInput({ label, value, onChange, tooltip, disabled }: CurrencyInputProps) {
   const [displayValue, setDisplayValue] = useState('');
-  const [isFocused, setIsFocused] = useState(false);
+  const [, setIsFocused] = useState(false);
 
   const formatNumberWithCommas = (str: string): string => {
     // Remove all non-digit characters

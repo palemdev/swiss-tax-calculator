@@ -1,13 +1,13 @@
 import type { CantonalTaxConfig, Municipality } from '../../types';
 
-// Schwyz Canton Tax Configuration 2024
+// Schwyz Canton Tax Configuration 2025
 // Known for low taxes (similar to Zug)
 export const schwyzConfig: CantonalTaxConfig = {
   cantonCode: 'SZ',
   cantonName: 'Schwyz',
   cantonNameDe: 'Schwyz',
   cantonNameFr: 'Schwytz',
-  year: 2024,
+  year: 2025,
   taxMultiplier: 100,
 
   tariffs: {

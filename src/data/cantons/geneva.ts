@@ -1,13 +1,13 @@
 import type { CantonalTaxConfig, Municipality } from '../../types';
 
-// Geneva Canton Tax Configuration 2024
+// Geneva Canton Tax Configuration 2025
 // Known for higher taxes
 export const genevaConfig: CantonalTaxConfig = {
   cantonCode: 'GE',
   cantonName: 'Geneva',
   cantonNameDe: 'Genf',
   cantonNameFr: 'Genève',
-  year: 2024,
+  year: 2025,
   taxMultiplier: 100,
 
   tariffs: {

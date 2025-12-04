@@ -358,7 +358,7 @@ src/
 │   └── comparisonService.ts
 │
 ├── data/
-│   ├── federalTax2024.ts
+│   ├── federalTax2025.ts
 │   ├── cantons/
 │   │   ├── zurich.ts
 │   │   ├── bern.ts
@@ -402,7 +402,7 @@ src/
 #### Calculator Page (Main View)
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  Header: Swiss Tax Calculator 2024                    [Compare] │
+│  Header: Swiss Tax Calculator 2025                    [Compare] │
 ├─────────────────────────────────────────────────────────────────┤
 │ ┌─────────────────────────┐  ┌────────────────────────────────┐ │
 │ │   INPUT FORM            │  │   RESULTS                      │ │
@@ -903,7 +903,7 @@ When providing tax data documents, please include:
 Example format:
 ```
 Canton: Zürich (ZH)
-Tax Year: 2024
+Tax Year: 2025
 Cantonal Multiplier: 100%
 
 Income Brackets (Single):
@@ -955,4 +955,4 @@ Municipalities:
 ---
 
 *Document Version: 1.0*
-*Last Updated: December 2024*
+*Last Updated: December 2025*

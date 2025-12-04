@@ -1,12 +1,12 @@
 import type { CantonalTaxConfig, Municipality } from '../../types';
 
-// Bern Canton Tax Configuration 2024
+// Bern Canton Tax Configuration 2025
 export const bernConfig: CantonalTaxConfig = {
   cantonCode: 'BE',
   cantonName: 'Bern',
   cantonNameDe: 'Bern',
   cantonNameFr: 'Berne',
-  year: 2024,
+  year: 2025,
   taxMultiplier: 100,
 
   tariffs: {

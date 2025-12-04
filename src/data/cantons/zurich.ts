@@ -1,12 +1,12 @@
 import type { CantonalTaxConfig, Municipality } from '../../types';
 
-// Zurich Canton Tax Configuration 2024
+// Zurich Canton Tax Configuration 2025
 export const zurichConfig: CantonalTaxConfig = {
   cantonCode: 'ZH',
   cantonName: 'Zurich',
   cantonNameDe: 'Zürich',
   cantonNameFr: 'Zurich',
-  year: 2024,
+  year: 2025,
   taxMultiplier: 100, // 100% = base rate
 
   tariffs: {

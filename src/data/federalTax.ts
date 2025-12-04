@@ -1,7 +1,7 @@
 import type { TaxBracket } from '../types';
 
-// Federal Tax Brackets 2024 - Single Tariff (Grundtarif)
-export const federalTaxBracketsSingle2024: TaxBracket[] = [
+// Federal Tax Brackets 2025 - Single Tariff (Grundtarif)
+export const federalTaxBracketsSingle2025: TaxBracket[] = [
   { minIncome: 0, maxIncome: 14500, baseAmount: 0, rate: 0 },
   { minIncome: 14500, maxIncome: 31600, baseAmount: 0, rate: 0.77 },
   { minIncome: 31600, maxIncome: 41400, baseAmount: 131.65, rate: 0.88 },
@@ -15,8 +15,8 @@ export const federalTaxBracketsSingle2024: TaxBracket[] = [
   { minIncome: 755200, maxIncome: null, baseAmount: 86847.85, rate: 11.50 },
 ];
 
-// Federal Tax Brackets 2024 - Married Tariff (Verheiratetentarif)
-export const federalTaxBracketsMarried2024: TaxBracket[] = [
+// Federal Tax Brackets 2025 - Married Tariff (Verheiratetentarif)
+export const federalTaxBracketsMarried2025: TaxBracket[] = [
   { minIncome: 0, maxIncome: 28300, baseAmount: 0, rate: 0 },
   { minIncome: 28300, maxIncome: 50900, baseAmount: 0, rate: 1.00 },
   { minIncome: 50900, maxIncome: 58400, baseAmount: 226.00, rate: 2.00 },
@@ -36,11 +36,11 @@ export const federalTaxBracketsMarried2024: TaxBracket[] = [
 
 export const getFederalTaxBrackets = (
   tariff: 'single' | 'married',
-  _year: number = 2024
+  _year: number = 2025
 ): TaxBracket[] => {
-  // Currently only 2024 data, can be extended for other years
+  // Currently only 2025 data, can be extended for other years
   if (tariff === 'married') {
-    return federalTaxBracketsMarried2024;
+    return federalTaxBracketsMarried2025;
   }
-  return federalTaxBracketsSingle2024;
+  return federalTaxBracketsSingle2025;
 };

@@ -1,12 +1,12 @@
 import type { CantonalTaxConfig, Municipality } from '../../types';
 
-// Basel-Stadt Canton Tax Configuration 2024
+// Basel-Stadt Canton Tax Configuration 2025
 export const baselStadtConfig: CantonalTaxConfig = {
   cantonCode: 'BS',
   cantonName: 'Basel-Stadt',
   cantonNameDe: 'Basel-Stadt',
   cantonNameFr: 'Bâle-Ville',
-  year: 2024,
+  year: 2025,
   taxMultiplier: 100,
 
   tariffs: {
@@ -73,13 +73,13 @@ export const baselStadtMunicipalities: Municipality[] = [
   { id: 'bs-bettingen', name: 'Bettingen', cantonCode: 'BS', taxMultiplier: 95, churchTaxMultipliers: { catholic: 6, protestant: 6, christCatholic: 5 } },
 ];
 
-// Basel-Landschaft Canton Tax Configuration 2024
+// Basel-Landschaft Canton Tax Configuration 2025
 export const baselLandConfig: CantonalTaxConfig = {
   cantonCode: 'BL',
   cantonName: 'Basel-Landschaft',
   cantonNameDe: 'Basel-Landschaft',
   cantonNameFr: 'Bâle-Campagne',
-  year: 2024,
+  year: 2025,
   taxMultiplier: 100,
 
   tariffs: {
