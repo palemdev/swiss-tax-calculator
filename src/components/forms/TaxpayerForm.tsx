@@ -90,6 +90,7 @@ export function TaxpayerForm() {
             }
             min={0}
             max={taxpayer.numberOfChildren}
+            placeholder="0"
             tooltip="Children using paid childcare (for childcare deduction)"
           />
         )}

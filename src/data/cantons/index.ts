@@ -17,10 +17,10 @@ export const municipalitiesByCantonCode: Record<string, Municipality[]> = {
 // Flat list of all municipalities
 export const allMunicipalities: Municipality[] = Object.values(municipalitiesByCantonCode).flat();
 
-// Canton list for dropdowns
+// Canton list for dropdowns (sorted alphabetically by name)
 export const cantonList = [
-  { code: 'ZG', name: 'Zug', nameFr: 'Zoug' },
   { code: 'SZ', name: 'Schwyz', nameFr: 'Schwytz' },
+  { code: 'ZG', name: 'Zug', nameFr: 'Zoug' },
 ];
 
 // Helper functions
@@ -29,7 +29,8 @@ export const getCantonConfig = (cantonCode: string): CantonalTaxConfig | undefin
 };
 
 export const getMunicipalitiesByCantonCode = (cantonCode: string): Municipality[] => {
-  return municipalitiesByCantonCode[cantonCode] || [];
+  const municipalities = municipalitiesByCantonCode[cantonCode] || [];
+  return [...municipalities].sort((a, b) => a.name.localeCompare(b.name));
 };
 
 export const getMunicipalityById = (municipalityId: string): Municipality | undefined => {
