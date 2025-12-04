@@ -17,21 +17,21 @@ export const federalTaxBracketsSingle2025: TaxBracket[] = [
 
 // Federal Tax Brackets 2025 - Married Tariff (Verheiratetentarif)
 export const federalTaxBracketsMarried2025: TaxBracket[] = [
-  { minIncome: 0, maxIncome: 32000, baseAmount: 0, rate: 0 },
-  { minIncome: 33000, maxIncome: 53500, baseAmount: 33.00, rate: 1.00 },
-  { minIncome: 53500, maxIncome: 61300, baseAmount: 239.00, rate: 2.00 },
-  { minIncome: 61400, maxIncome: 79200, baseAmount: 398.00, rate: 3.00 },
-  { minIncome: 79200, maxIncome: 95000, baseAmount: 933.00, rate: 4.00 },
-  { minIncome: 95000, maxIncome: 108700, baseAmount: 1566.00, rate: 5.00 },
-  { minIncome: 108700, maxIncome: 120600, baseAmount: 2252.00, rate: 6.00 },
-  { minIncome: 120600, maxIncome: 130600, baseAmount: 2967.00, rate: 7.00 },
-  { minIncome: 130600, maxIncome: 138400, baseAmount: 3688.00, rate: 8.00 },
-  { minIncome: 138400, maxIncome: 144300, baseAmount: 4293.00, rate: 9.00 },
-  { minIncome: 144300, maxIncome: 148300, baseAmount: 4825.00, rate: 10.00 },
-  { minIncome: 148300, maxIncome: 150400, baseAmount: 5226.00, rate: 11.00 },
-  { minIncome: 150400, maxIncome: 152400, baseAmount: 5458.00, rate: 12.00 },
-  { minIncome: 152400, maxIncome: 940900, baseAmount: 5669.00, rate: 13.00 },
-  { minIncome: 940900, maxIncome: null, baseAmount: 108203.50, rate: 11.50 },
+  { minIncome: 0, maxIncome: 33000, baseAmount: 0, rate: 0 },
+  { minIncome: 33000, maxIncome: 53300, baseAmount: 33.00, rate: 1.00 },
+  { minIncome: 53400, maxIncome: 61300, baseAmount: 239.00, rate: 2.00 },
+  { minIncome: 61300, maxIncome: 79100, baseAmount: 398.00, rate: 3.00 },
+  { minIncome: 79100, maxIncome: 94900, baseAmount: 933.00, rate: 4.00 },
+  { minIncome: 94900, maxIncome: 108600, baseAmount: 1566.00, rate: 5.00 },
+  { minIncome: 108600, maxIncome: 120500, baseAmount: 2252.00, rate: 6.00 },
+  { minIncome: 120500, maxIncome: 130500, baseAmount: 2967.00, rate: 7.00 },
+  { minIncome: 130500, maxIncome: 138300, baseAmount: 3660.00, rate: 8.00 },
+  { minIncome: 138300, maxIncome: 144200, baseAmount: 4284.00, rate: 9.00 },
+  { minIncome: 144200, maxIncome: 148200, baseAmount: 4815.00, rate: 10.00 },
+  { minIncome: 148200, maxIncome: 150300, baseAmount: 5215.00, rate: 11.00 },
+  { minIncome: 150300, maxIncome: 152300, baseAmount: 5446.00, rate: 12.00 },
+  { minIncome: 152300, maxIncome: 940800, baseAmount: 5686.00, rate: 13.00 },
+  { minIncome: 940800, maxIncome: null, baseAmount: 108191.00, rate: 11.50 },
 ];
 
 export const getFederalTaxBrackets = (
