@@ -41,6 +41,7 @@ export function ComparisonChart() {
       cantonal: r.taxBreakdown.cantonalTax.taxAmount,
       municipal: r.taxBreakdown.municipalTax.taxAmount,
       church: r.taxBreakdown.churchTax.taxAmount,
+      wealth: r.taxBreakdown.wealthTax.totalTax,
       total: r.taxBreakdown.totalTax,
       isCurrent: r.canton === taxpayer.canton && r.municipality === taxpayer.municipality,
     }));
@@ -125,10 +126,11 @@ export function ComparisonChart() {
             <Bar dataKey="cantonal" name="Cantonal" stackId="a" fill={TAX_COLORS.cantonal} />
             <Bar dataKey="municipal" name="Municipal" stackId="a" fill={TAX_COLORS.municipal} />
             <Bar dataKey="church" name="Church" stackId="a" fill={TAX_COLORS.church} />
+            <Bar dataKey="wealth" name="Wealth" stackId="a" fill={TAX_COLORS.wealth} />
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <div className="flex justify-center gap-6 mt-4">
+      <div className="flex justify-center flex-wrap gap-4 mt-4">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded" style={{ backgroundColor: TAX_COLORS.federal }} />
           <span className="text-sm text-gray-600">Federal</span>
@@ -144,6 +146,10 @@ export function ComparisonChart() {
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded" style={{ backgroundColor: TAX_COLORS.church }} />
           <span className="text-sm text-gray-600">Church</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded" style={{ backgroundColor: TAX_COLORS.wealth }} />
+          <span className="text-sm text-gray-600">Wealth</span>
         </div>
       </div>
     </Card>
