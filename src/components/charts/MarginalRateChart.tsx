@@ -18,7 +18,7 @@ import { calculateTax } from '../../services/taxCalculator';
 import { TAX_YEAR } from '../../data/constants';
 
 export function MarginalRateChart() {
-  const { results, taxpayer, income, deductions, enableDeductions } = useTax();
+  const { results, taxpayer, deductions, enableDeductions } = useTax();
 
   // Generate data points for the chart
   const chartData = useMemo(() => {
@@ -37,14 +37,17 @@ export function MarginalRateChart() {
         const result = calculateTax({
           year: TAX_YEAR,
           taxpayer,
-          income: { grossIncome: inc, wealth: income.wealth },
+          income: { grossIncome: inc, wealth: 0 }, // Exclude wealth for income tax chart
           deductions,
           enableDeductions,
         });
 
+        // Calculate income-only effective rate (exclude wealth tax)
+        const incomeEffectiveRate = inc > 0 ? (result.totalIncomeTax / inc) * 100 : 0;
+
         dataPoints.push({
           income: inc,
-          effectiveRate: result.effectiveRate,
+          effectiveRate: incomeEffectiveRate,
           federalRate: result.federalTax.effectiveRate,
           cantonalRate:
             result.cantonalTax.effectiveRate +
@@ -57,7 +60,7 @@ export function MarginalRateChart() {
     }
 
     return dataPoints;
-  }, [taxpayer, income, deductions, enableDeductions, results]);
+  }, [taxpayer, deductions, enableDeductions, results]);
 
   const currentIncome = results?.grossIncome || 0;
 
@@ -81,8 +84,8 @@ export function MarginalRateChart() {
 
   return (
     <Card
-      title="Tax Rate by Income"
-      subtitle="How tax rates change with income"
+      title="Income Tax Rate"
+      subtitle="How income tax rates change with income (excludes wealth tax)"
     >
       <div className="h-72">
         <ResponsiveContainer width="100%" height="100%">
