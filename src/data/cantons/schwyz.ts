@@ -14,6 +14,21 @@ export const schwyzConfig: CantonalTaxConfig = {
   // Cantonal tax multiplier is 115% (source: official PDF "Steuerfüsse Kanton 115*")
   taxMultiplier: 115,
 
+  // Wealth Tax (Vermögenssteuer) - Linear/flat rate of 0.6‰
+  // Source: § 47 Steuergesetz Kanton Schwyz
+  // Sozialabzüge: Single 125k, Married 250k, per child 30k
+  wealthTax: {
+    allowances: {
+      single: 125000,
+      married: 250000,
+      perChild: 30000,
+    },
+    // Flat rate of 0.6‰ = 0.06% (single bracket covers all wealth)
+    brackets: [
+      { minWealth: 0, maxWealth: null, rate: 0.06 },
+    ],
+  },
+
   // Note: Schwyz uses a detailed lookup table. These brackets approximate the official tariff.
   // Source: Schwyzer Steuerbuch 90.10 - Einkommenssteuertarif gemäss § 36 Abs. 1 StG (gültig ab 2015)
   // Verified against official calculator: CHF 150,000 -> 5,273.90 (rate 3.5159%)
