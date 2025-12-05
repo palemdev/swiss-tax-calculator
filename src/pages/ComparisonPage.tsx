@@ -4,6 +4,7 @@ import { useTax } from '../context/TaxContext';
 import { TaxSummary } from '../components/results/TaxSummary';
 import { ComparisonTable } from '../components/comparison/ComparisonTable';
 import { ComparisonChart } from '../components/comparison/ComparisonChart';
+import { WealthTaxComparisonChart } from '../components/charts/WealthTaxComparisonChart';
 import { Card } from '../components/common/Card';
 import { formatCurrency, formatPercentage } from '../utils/formatters';
 
@@ -123,6 +124,11 @@ export function ComparisonPage() {
           <ComparisonChart />
         </div>
       )}
+
+      {/* Wealth Tax Comparison */}
+      <div className="mb-8">
+        <WealthTaxComparisonChart />
+      </div>
 
       {/* Comparison Table */}
       <ComparisonTable />
