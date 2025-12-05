@@ -24,6 +24,7 @@ const initialTaxpayer: TaxpayerProfile = {
 
 const initialIncome: IncomeDetails = {
   grossIncome: 150000,
+  wealth: 0,
 };
 
 const initialDeductions: DeductionInputs = {

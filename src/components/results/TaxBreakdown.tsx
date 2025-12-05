@@ -55,6 +55,7 @@ export function TaxBreakdown() {
   }
 
   const showChurchTax = taxpayer.religion !== 'none' && taxpayer.religion !== 'other';
+  const showWealthTax = results.wealthTax.grossWealth > 0;
 
   return (
     <Card title="Tax Breakdown" subtitle="Detailed tax by level">
@@ -87,8 +88,25 @@ export function TaxBreakdown() {
             )}
           </>
         )}
+        {showWealthTax && (
+          <div className="mt-3 pt-3 border-t border-gray-100">
+            <div className="flex justify-between text-sm text-gray-600">
+              <span>Net Wealth</span>
+              <span className="font-medium">{formatCurrency(results.wealthTax.grossWealth, true)}</span>
+            </div>
+            <div className="flex justify-between text-sm text-gray-600 mt-1">
+              <span>Wealth Allowance</span>
+              <span className="font-medium text-green-600">-{formatCurrency(results.wealthTax.allowance, true)}</span>
+            </div>
+            <div className="flex justify-between text-sm font-medium text-gray-900 mt-1">
+              <span>Taxable Wealth</span>
+              <span>{formatCurrency(results.wealthTax.taxableWealth, true)}</span>
+            </div>
+          </div>
+        )}
       </div>
 
+      <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Income Tax</div>
       <TaxRow
         label="Federal Tax"
         amount={results.federalTax.taxAmount}
@@ -118,6 +136,19 @@ export function TaxBreakdown() {
           color={TAX_COLORS.church}
         />
       )}
+
+      {showWealthTax && (
+        <>
+          <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mt-4 mb-2">Wealth Tax</div>
+          <TaxRow
+            label="Wealth Tax"
+            amount={results.wealthTax.totalTax}
+            rate={results.wealthTax.effectiveRate}
+            color={TAX_COLORS.wealth}
+          />
+        </>
+      )}
+
       <TaxRow
         label="Total Tax"
         amount={results.totalTax}

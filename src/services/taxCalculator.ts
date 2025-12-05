@@ -1,9 +1,11 @@
 import type {
   TaxBracket,
+  WealthTaxBracket,
   TaxCalculationInput,
   TaxBreakdown,
   DeductionBreakdown,
   TaxLevelResult,
+  WealthTaxResult,
   CantonalTaxConfig,
   Municipality,
 } from '../types';
@@ -272,6 +274,99 @@ export function calculateChurchTax(
   };
 }
 
+// Calculate wealth tax using progressive brackets
+function calculateWealthTaxFromBrackets(taxableWealth: number, brackets: WealthTaxBracket[]): number {
+  if (taxableWealth <= 0) {
+    return 0;
+  }
+
+  let totalTax = 0;
+  let remainingWealth = taxableWealth;
+
+  for (const bracket of brackets) {
+    if (remainingWealth <= 0) break;
+
+    const bracketSize = bracket.maxWealth !== null
+      ? bracket.maxWealth - bracket.minWealth
+      : Infinity;
+
+    const wealthInBracket = Math.min(remainingWealth, bracketSize);
+    totalTax += wealthInBracket * (bracket.rate / 100);
+    remainingWealth -= wealthInBracket;
+  }
+
+  return totalTax;
+}
+
+// Calculate wealth tax
+export function calculateWealthTax(
+  grossWealth: number,
+  cantonConfig: CantonalTaxConfig,
+  municipality: Municipality,
+  isMarried: boolean,
+  numberOfChildren: number,
+  religion: string
+): WealthTaxResult {
+  // Return zero result if canton doesn't have wealth tax configured
+  if (!cantonConfig.wealthTax) {
+    return {
+      grossWealth,
+      allowance: 0,
+      taxableWealth: 0,
+      cantonalTax: 0,
+      municipalTax: 0,
+      churchTax: 0,
+      totalTax: 0,
+      effectiveRate: 0,
+    };
+  }
+
+  const { allowances, brackets } = cantonConfig.wealthTax;
+
+  // Calculate allowance based on civil status and children
+  const baseAllowance = isMarried ? allowances.married : allowances.single;
+  const childAllowance = numberOfChildren * allowances.perChild;
+  const totalAllowance = baseAllowance + childAllowance;
+
+  // Calculate taxable wealth
+  const taxableWealth = Math.max(0, grossWealth - totalAllowance);
+
+  // Calculate base wealth tax using progressive brackets
+  const baseTax = calculateWealthTaxFromBrackets(taxableWealth, brackets);
+
+  // Apply cantonal and municipal multipliers
+  const cantonalTax = roundToNearest5Rappen(baseTax * (cantonConfig.taxMultiplier / 100));
+  const municipalTax = roundToNearest5Rappen(baseTax * (municipality.taxMultiplier / 100));
+
+  // Calculate church tax on wealth (if applicable)
+  let churchTax = 0;
+  if (religion !== 'none' && religion !== 'other') {
+    let churchMultiplier = 0;
+    if (religion === 'catholic') {
+      churchMultiplier = municipality.churchTaxMultipliers.catholic;
+    } else if (religion === 'protestant') {
+      churchMultiplier = municipality.churchTaxMultipliers.protestant;
+    } else if (religion === 'christCatholic') {
+      churchMultiplier = municipality.churchTaxMultipliers.christCatholic;
+    }
+    churchTax = roundToNearest5Rappen(baseTax * (churchMultiplier / 100));
+  }
+
+  const totalTax = cantonalTax + municipalTax + churchTax;
+  const effectiveRate = grossWealth > 0 ? (totalTax / grossWealth) * 100 : 0;
+
+  return {
+    grossWealth,
+    allowance: totalAllowance,
+    taxableWealth,
+    cantonalTax,
+    municipalTax,
+    churchTax,
+    totalTax,
+    effectiveRate,
+  };
+}
+
 // Calculate marginal rate (combined)
 function calculateMarginalRate(
   taxableIncome: number,
@@ -354,8 +449,21 @@ export function calculateTax(input: TaxCalculationInput): TaxBreakdown {
     churchTax.taxAmount += partnerChurchTax.taxAmount;
   }
 
-  // Total tax
-  const totalTax = federalTax.taxAmount + cantonalTax.taxAmount + municipalTax.taxAmount + churchTax.taxAmount;
+  // Calculate wealth tax
+  const wealthTax = calculateWealthTax(
+    income.wealth,
+    cantonConfig,
+    municipality,
+    isMarried,
+    taxpayer.numberOfChildren,
+    taxpayer.religion
+  );
+
+  // Total income tax (before wealth tax)
+  const totalIncomeTax = federalTax.taxAmount + cantonalTax.taxAmount + municipalTax.taxAmount + churchTax.taxAmount;
+
+  // Total tax (income + wealth)
+  const totalTax = totalIncomeTax + wealthTax.totalTax;
   const effectiveRate = grossIncome > 0 ? (totalTax / grossIncome) * 100 : 0;
   const marginalRate = calculateMarginalRate(taxableIncomeCantonal, cantonConfig, municipality, isMarried);
 
@@ -371,7 +479,9 @@ export function calculateTax(input: TaxCalculationInput): TaxBreakdown {
     cantonalTax,
     municipalTax,
     churchTax,
+    wealthTax,
     totalTax,
+    totalIncomeTax,
     effectiveRate,
     marginalRate,
     netIncome: grossIncome - totalTax,

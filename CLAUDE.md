@@ -59,3 +59,4 @@ This is a frontend-only Swiss tax calculator built with React, TypeScript, and T
 ## Visualization
 
 Charts use Recharts library. Tax colors are defined in `src/data/constants.ts` as `TAX_COLORS`.
+- The dev server is already running typicall when Claude Code runs

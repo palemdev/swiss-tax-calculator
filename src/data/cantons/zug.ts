@@ -10,6 +10,23 @@ export const zugConfig: CantonalTaxConfig = {
   year: 2025,
   taxMultiplier: 82, // Low cantonal multiplier
 
+  // Wealth Tax (Vermögenssteuer) 2024
+  // Indexstand per Juni 2024: 107.70, Basis - Teilrevision StG 2024
+  // Allowances: single 200k, married 400k, per child 100k
+  wealthTax: {
+    allowances: {
+      single: 200000,
+      married: 400000,
+      perChild: 100000,
+    },
+    brackets: [
+      { minWealth: 0, maxWealth: 254000, rate: 0.0425 },
+      { minWealth: 254000, maxWealth: 508000, rate: 0.085 },
+      { minWealth: 508000, maxWealth: 762000, rate: 0.1275 },
+      { minWealth: 762000, maxWealth: null, rate: 0.17 },
+    ],
+  },
+
   // Grundtarif 2025 (Indexstand per Juni 2024: 110.2, Basis: Dezember 2005)
   // Source: Official Canton Zug tax tariff table
   tariffs: {

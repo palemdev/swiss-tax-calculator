@@ -57,6 +57,7 @@ export const TAX_COLORS = {
   cantonal: '#8b5cf6',    // Purple
   municipal: '#ec4899',   // Pink
   church: '#6b7280',      // Gray
+  wealth: '#f59e0b',      // Amber
   deductions: '#22c55e',  // Green
   netIncome: '#10b981',   // Emerald
 };

@@ -9,6 +9,12 @@ export interface TaxBracket {
   rate: number; // Percentage (e.g., 11.5 for 11.5%)
 }
 
+export interface WealthTaxBracket {
+  minWealth: number;
+  maxWealth: number | null;
+  rate: number; // Percentage (e.g., 0.0425 for 0.0425%)
+}
+
 export interface FederalTaxTariff {
   tariffType: 'single' | 'married';
   brackets: TaxBracket[];
@@ -40,6 +46,15 @@ export interface CantonalDeductionLimits {
   };
 }
 
+export interface WealthTaxConfig {
+  allowances: {
+    single: number;
+    married: number;
+    perChild: number;
+  };
+  brackets: WealthTaxBracket[];
+}
+
 export interface CantonalTaxConfig {
   cantonCode: string;
   cantonName: string;
@@ -52,6 +67,7 @@ export interface CantonalTaxConfig {
     married: TaxBracket[];
   };
   deductionLimits: CantonalDeductionLimits;
+  wealthTax?: WealthTaxConfig;
 }
 
 export interface Municipality {
@@ -85,6 +101,7 @@ export interface TaxpayerProfile {
 
 export interface IncomeDetails {
   grossIncome: number;
+  wealth: number;
 }
 
 export interface DeductionInputs {
@@ -169,6 +186,17 @@ export interface TaxLevelResult {
   effectiveRate: number;
 }
 
+export interface WealthTaxResult {
+  grossWealth: number;
+  allowance: number;
+  taxableWealth: number;
+  cantonalTax: number;
+  municipalTax: number;
+  churchTax: number;
+  totalTax: number;
+  effectiveRate: number;
+}
+
 export interface TaxBreakdown {
   grossIncome: number;
   deductions: DeductionBreakdown;
@@ -182,8 +210,10 @@ export interface TaxBreakdown {
   cantonalTax: TaxLevelResult;
   municipalTax: TaxLevelResult;
   churchTax: TaxLevelResult;
+  wealthTax: WealthTaxResult;
 
   totalTax: number;
+  totalIncomeTax: number;
   effectiveRate: number;
   marginalRate: number;
   netIncome: number;
