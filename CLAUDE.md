@@ -45,18 +45,29 @@ This is a frontend-only Swiss tax calculator built with React, TypeScript, and T
 
 ### Swiss Tax System Notes
 
-- **Tariffs**: Single (Grundtarif) vs Married (Verheiratetentarif) use different brackets
+- **Tariffs**: Single (Grundtarif) vs Married (Verheiratetentarif/Mehrpersonentarif) use different brackets
 - **Multipliers**: Cantonal and municipal taxes apply multipliers to base tax (e.g., 119% for Zürich city)
 - **Church Tax**: Based on religion, calculated as percentage of cantonal base tax
+- **Wealth Tax**: Optional per canton, uses progressive brackets with allowances for marital status and children
 - **Pillar 3a**: CHF 7,056 limit with employer pension, CHF 35,280 without
 
 ## Adding New Cantons
 
 1. Create `src/data/cantons/{canton}.ts` with `CantonalTaxConfig` and municipalities array
-2. Export from `src/data/cantons/index.ts`
-3. Add to `cantonConfigs`, `municipalitiesByCantonCode`, and `cantonList`
+2. Include `wealthTax` config if the canton has wealth tax (optional - some cantons don't)
+3. Export from `src/data/cantons/index.ts`
+4. Add to `cantonConfigs`, `municipalitiesByCantonCode`, and `cantonList`
+
+## Component Patterns
+
+**Forms** use react-hook-form with Zod validation schemas. Form state syncs to TaxContext via `updateTaxpayer`, `updateIncome`, `updateDeductions`.
+
+**Pages** (`src/pages/`)
+- `CalculatorPage` - Main tax calculation with forms and results
+- `ComparisonPage` - Compare taxes across all municipalities
 
 ## Visualization
 
 Charts use Recharts library. Tax colors are defined in `src/data/constants.ts` as `TAX_COLORS`.
-- The dev server is already running typicall when Claude Code runs
+
+Note: The dev server is typically already running when Claude Code runs.
