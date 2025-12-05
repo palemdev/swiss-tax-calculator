@@ -39,7 +39,7 @@ export function WealthTaxComparisonChart() {
   // State for selected locations to compare
   const [selectedLocations, setSelectedLocations] = useState<SelectedLocation[]>([
     { cantonCode: 'ZG', municipalityId: 'zg-zug' },
-    { cantonCode: 'SZ', municipalityId: 'sz-wollerau' },
+    { cantonCode: 'SZ', municipalityId: 'sz-arth' },
   ]);
 
   // State for adding new location
