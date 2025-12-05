@@ -7,6 +7,7 @@ import { TaxBreakdown } from '../components/results/TaxBreakdown';
 import { DeductionsSummary } from '../components/results/DeductionsSummary';
 import { TaxDistributionPie } from '../components/charts/TaxDistributionPie';
 import { MarginalRateChart } from '../components/charts/MarginalRateChart';
+import { WealthTaxRateChart } from '../components/charts/WealthTaxRateChart';
 import { IncomeBreakdownChart } from '../components/charts/IncomeBreakdownChart';
 
 export function CalculatorPage() {
@@ -36,8 +37,16 @@ export function CalculatorPage() {
 
       {/* Full Width Charts */}
       <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <MarginalRateChart />
-        <IncomeBreakdownChart />
+        {/* Left Column - Tax Rate Charts */}
+        <div className="space-y-6">
+          <MarginalRateChart />
+          <WealthTaxRateChart />
+        </div>
+
+        {/* Right Column - Income Breakdown */}
+        <div>
+          <IncomeBreakdownChart />
+        </div>
       </div>
     </div>
   );
