@@ -1,16 +1,19 @@
 import type { CantonalTaxConfig, Municipality } from '../../types';
 import { zugConfig, zugMunicipalities } from './zug';
 import { schwyzConfig, schwyzMunicipalities } from './schwyz';
+import { zurichConfig, zurichMunicipalities } from './zh';
 
 // All canton configurations
 export const cantonConfigs: Record<string, CantonalTaxConfig> = {
   ZG: zugConfig,
+  ZH: zurichConfig,
   SZ: schwyzConfig,
 };
 
 // All municipalities by canton
 export const municipalitiesByCantonCode: Record<string, Municipality[]> = {
   ZG: zugMunicipalities,
+  ZH: zurichMunicipalities,
   SZ: schwyzMunicipalities,
 };
 
@@ -21,6 +24,7 @@ export const allMunicipalities: Municipality[] = Object.values(municipalitiesByC
 export const cantonList = [
   { code: 'SZ', name: 'Schwyz', nameFr: 'Schwytz' },
   { code: 'ZG', name: 'Zug', nameFr: 'Zoug' },
+  { code: 'ZH', name: 'Zürich', nameFr: 'Zurich' },
 ];
 
 // Helper functions
