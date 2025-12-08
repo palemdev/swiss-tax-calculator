@@ -69,7 +69,13 @@ export function TaxpayerForm() {
         <Input
           label="Number of Children"
           value={taxpayer.numberOfChildren}
-          onChange={(value) => updateTaxpayer({ numberOfChildren: Math.max(0, Math.floor(value)) })}
+          onChange={(value) => {
+            const newCount = Math.max(0, Math.floor(value));
+            updateTaxpayer({
+              numberOfChildren: newCount,
+              childrenInChildcare: Math.min(taxpayer.childrenInChildcare, newCount),
+            });
+          }}
           min={0}
           max={10}
           placeholder="0"

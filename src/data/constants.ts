@@ -11,8 +11,9 @@ export const PILLAR_3A_LIMITS = {
 // AHV/IV/EO Contribution rates (employee portion)
 export const SOCIAL_SECURITY_RATES = {
   ahvIvEo: 5.3,    // AHV/IV/EO employee contribution
-  alv: 1.1,        // Unemployment insurance (up to 148,200 CHF)
-  alvSolidarity: 0.5, // ALV solidarity contribution (above 148,200 CHF)
+  alv: 1.1,        // Unemployment insurance (up to cap)
+  alvSolidarity: 0.5, // ALV solidarity contribution (above cap)
+  alvCap: 148200,  // Maximum income for regular ALV rate
 };
 
 // Federal tax thresholds

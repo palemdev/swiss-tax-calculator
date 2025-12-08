@@ -44,6 +44,15 @@ export interface CantonalDeductionLimits {
     single: number;
     married: number;
   };
+  // Canton-specific deductions (optional - not all cantons have these)
+  dualEarnerDeduction?: number;              // Zweiverdienerabzug (SZ)
+  rentDeduction?: {                          // Mietzinsabzug (ZG)
+    maxAmount: number;
+    percentage: number;                      // e.g., 30 for 30%
+  };
+  selfCareDeduction?: number;                // Eigenbetreuungsabzug (ZG) - per child under 15
+  educationDeduction?: number;               // Weiterbildungskosten - max amount
+  childEducationDeduction?: number;          // Kinderzusatzabzug (ZG) - for children 15+ in education
 }
 
 export interface WealthTaxConfig {
@@ -124,6 +133,13 @@ export interface DeductionInputs {
   childcareExpenses: number;
   alimonyPaid: number;
 
+  // Canton-specific deductions
+  rentExpenses: number;                    // For Mietzinsabzug (ZG)
+  educationExpenses: number;               // For Weiterbildungskosten
+  usesSelfCareDeduction: boolean;          // Eigenbetreuungsabzug instead of childcare (ZG)
+  childrenInEducation: number;             // Children 15+ in education for Kinderzusatzabzug (ZG)
+  isDualEarnerCouple: boolean;             // For Zweiverdienerabzug (SZ)
+
   // Other
   debtInterest: number;
   charitableDonations: number;
@@ -144,6 +160,11 @@ export interface TaxCalculationInput {
 // ============================================
 
 export interface DeductionBreakdown {
+  socialSecurity: {
+    ahvIvEo: number;
+    alv: number;
+    total: number;
+  };
   professionalExpenses: {
     commuting: number;
     meals: number;
@@ -162,8 +183,11 @@ export interface DeductionBreakdown {
   };
   personalDeductions: {
     married: number;
+    dualEarner: number;
     children: number;
     childcare: number;
+    selfCare: number;
+    childEducation: number;
     social: number;
     total: number;
   };
@@ -172,6 +196,8 @@ export interface DeductionBreakdown {
     donations: number;
     medical: number;
     alimony: number;
+    rent: number;
+    education: number;
     other: number;
     total: number;
   };

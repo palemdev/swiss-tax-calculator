@@ -39,6 +39,13 @@ const initialDeductions: DeductionInputs = {
   hasEmployerPension: true,
   childcareExpenses: 0,
   alimonyPaid: 0,
+  // Canton-specific deductions
+  rentExpenses: 0,
+  educationExpenses: 0,
+  usesSelfCareDeduction: false,
+  childrenInEducation: 0,
+  isDualEarnerCouple: false,
+  // Other deductions
   debtInterest: 0,
   charitableDonations: 0,
   medicalExpenses: 0,
@@ -74,7 +81,7 @@ const initialState: TaxState = {
   results: null,
   comparisonResults: [],
   isCalculating: false,
-  enableDeductions: false,
+  enableDeductions: true,
   showAdvancedDeductions: false,
 };
 

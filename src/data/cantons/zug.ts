@@ -83,13 +83,21 @@ export const zugConfig: CantonalTaxConfig = {
       withPension: 7056,
       withoutPension: 35280,
     },
-    childDeduction: 12000,
-    childcareDeduction: 6000,
+    childDeduction: 12400,               // Updated: CHF 12'400 (teuerungsbereinigt)
+    childcareDeduction: 25000,           // Updated: CHF 25'000 Fremdbetreuungsabzug
     marriedDeduction: 6100,
     socialDeductions: {
-      single: 4100,
-      married: 8200,
+      single: 11800,                     // Updated: Persönlicher Abzug
+      married: 23600,                    // Updated: Persönlicher Abzug
     },
+    // ZG-specific deductions
+    rentDeduction: {
+      maxAmount: 10800,                  // CHF 10'800 for 2025
+      percentage: 30,                    // 30% of net rent
+    },
+    selfCareDeduction: 12200,            // Eigenbetreuungsabzug CHF 12'200 (2025) per child under 15
+    educationDeduction: 12000,           // Weiterbildungskosten max
+    childEducationDeduction: 12000,      // Kinderzusatzabzug for children 15+ in education
   },
 };
 

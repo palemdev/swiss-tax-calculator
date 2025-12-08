@@ -11,7 +11,7 @@ import type {
 } from '../types';
 import { getFederalTaxBrackets } from '../data/federalTax';
 import { getCantonConfig, getMunicipalityById } from '../data/cantons';
-import { PILLAR_3A_LIMITS, FEDERAL_DEDUCTION_LIMITS } from '../data/constants';
+import { PILLAR_3A_LIMITS, FEDERAL_DEDUCTION_LIMITS, SOCIAL_SECURITY_RATES } from '../data/constants';
 
 // Calculate tax using progressive brackets
 function calculateTaxFromBrackets(taxableIncome: number, brackets: TaxBracket[]): { tax: number; marginalRate: number } {
@@ -61,6 +61,15 @@ type DeductionLimits = {
     single: number;
     married: number;
   };
+  // Canton-specific optional deductions
+  dualEarnerDeduction?: number;
+  rentDeduction?: {
+    maxAmount: number;
+    percentage: number;
+  };
+  selfCareDeduction?: number;
+  educationDeduction?: number;
+  childEducationDeduction?: number;
 };
 
 // Calculate deductions using provided limits
@@ -68,8 +77,22 @@ export function calculateDeductions(
   input: TaxCalculationInput,
   limits: DeductionLimits
 ): DeductionBreakdown {
-  const { taxpayer, deductions } = input;
+  const { taxpayer, income, deductions } = input;
   const isMarried = taxpayer.civilStatus === 'married';
+  const grossIncome = income.grossIncome;
+
+  // Social security contributions (AHV/IV/EO and ALV)
+  const ahvIvEo = grossIncome * (SOCIAL_SECURITY_RATES.ahvIvEo / 100);
+
+  // ALV: 1.1% up to cap, 0.5% solidarity above cap
+  let alv = 0;
+  if (grossIncome <= SOCIAL_SECURITY_RATES.alvCap) {
+    alv = grossIncome * (SOCIAL_SECURITY_RATES.alv / 100);
+  } else {
+    alv = SOCIAL_SECURITY_RATES.alvCap * (SOCIAL_SECURITY_RATES.alv / 100) +
+          (grossIncome - SOCIAL_SECURITY_RATES.alvCap) * (SOCIAL_SECURITY_RATES.alvSolidarity / 100);
+  }
+  const socialSecurityTotal = ahvIvEo + alv;
 
   // Professional expenses
   let professionalCommuting = 0;
@@ -105,25 +128,67 @@ export function calculateDeductions(
 
   // Personal deductions
   const marriedDeduction = isMarried ? limits.marriedDeduction : 0;
+
+  // Dual earner deduction (SZ) - only for married couples where both work
+  const dualEarnerDeduction = (isMarried && deductions.isDualEarnerCouple && limits.dualEarnerDeduction)
+    ? limits.dualEarnerDeduction
+    : 0;
+
   const childDeduction = taxpayer.numberOfChildren * limits.childDeduction;
-  const childcareDeduction = Math.min(
-    deductions.childcareExpenses,
-    taxpayer.childrenInChildcare * limits.childcareDeduction
-  );
+
+  // Childcare vs Self-care deduction (mutually exclusive in ZG)
+  // Self-care is for parents who care for children themselves instead of using external childcare
+  let childcareDeduction = 0;
+  let selfCareDeduction = 0;
+
+  if (deductions.usesSelfCareDeduction && limits.selfCareDeduction) {
+    // Self-care deduction (Eigenbetreuungsabzug) - per child in childcare age (under 15)
+    selfCareDeduction = taxpayer.childrenInChildcare * limits.selfCareDeduction;
+  } else {
+    // External childcare deduction (Fremdbetreuungsabzug)
+    childcareDeduction = Math.min(
+      deductions.childcareExpenses,
+      taxpayer.childrenInChildcare * limits.childcareDeduction
+    );
+  }
+
+  // Child education deduction (ZG) - for children 15+ in education
+  const childEducationDeduction = limits.childEducationDeduction
+    ? (deductions.childrenInEducation || 0) * limits.childEducationDeduction
+    : 0;
+
   const socialDeduction = isMarried ? limits.socialDeductions.married : limits.socialDeductions.single;
-  const personalTotal = marriedDeduction + childDeduction + childcareDeduction + socialDeduction;
+  const personalTotal = marriedDeduction + dualEarnerDeduction + childDeduction + childcareDeduction + selfCareDeduction + childEducationDeduction + socialDeduction;
 
   // Other deductions
   const debtInterest = deductions.debtInterest;
   const donations = deductions.charitableDonations;
   const medical = deductions.medicalExpenses;
   const alimony = deductions.alimonyPaid;
-  const other = deductions.otherDeductions;
-  const otherTotal = debtInterest + donations + medical + alimony + other;
 
-  const totalDeductions = professionalTotal + insuranceTotal + pensionTotal + personalTotal + otherTotal;
+  // Rent deduction (ZG) - percentage of rent up to max
+  let rentDeduction = 0;
+  if (limits.rentDeduction && deductions.rentExpenses > 0) {
+    const calculatedRent = deductions.rentExpenses * (limits.rentDeduction.percentage / 100);
+    rentDeduction = Math.min(calculatedRent, limits.rentDeduction.maxAmount);
+  }
+
+  // Education/training deduction
+  const educationDeduction = limits.educationDeduction
+    ? Math.min(deductions.educationExpenses || 0, limits.educationDeduction)
+    : 0;
+
+  const other = deductions.otherDeductions;
+  const otherTotal = debtInterest + donations + medical + alimony + rentDeduction + educationDeduction + other;
+
+  const totalDeductions = socialSecurityTotal + professionalTotal + insuranceTotal + pensionTotal + personalTotal + otherTotal;
 
   return {
+    socialSecurity: {
+      ahvIvEo,
+      alv,
+      total: socialSecurityTotal,
+    },
     professionalExpenses: {
       commuting: professionalCommuting,
       meals: professionalMeals,
@@ -142,8 +207,11 @@ export function calculateDeductions(
     },
     personalDeductions: {
       married: marriedDeduction,
+      dualEarner: dualEarnerDeduction,
       children: childDeduction,
       childcare: childcareDeduction,
+      selfCare: selfCareDeduction,
+      childEducation: childEducationDeduction,
       social: socialDeduction,
       total: personalTotal,
     },
@@ -152,6 +220,8 @@ export function calculateDeductions(
       donations,
       medical,
       alimony,
+      rent: rentDeduction,
+      education: educationDeduction,
       other,
       total: otherTotal,
     },
@@ -390,11 +460,12 @@ function calculateMarginalRate(
 
 // Empty deduction breakdown for when deductions are disabled
 const emptyDeductions: DeductionBreakdown = {
+  socialSecurity: { ahvIvEo: 0, alv: 0, total: 0 },
   professionalExpenses: { commuting: 0, meals: 0, other: 0, total: 0 },
   insurancePremiums: { health: 0, other: 0, total: 0 },
   pensionContributions: { pillar2: 0, pillar3a: 0, total: 0 },
-  personalDeductions: { married: 0, children: 0, childcare: 0, social: 0, total: 0 },
-  otherDeductions: { debtInterest: 0, donations: 0, medical: 0, alimony: 0, other: 0, total: 0 },
+  personalDeductions: { married: 0, dualEarner: 0, children: 0, childcare: 0, selfCare: 0, childEducation: 0, social: 0, total: 0 },
+  otherDeductions: { debtInterest: 0, donations: 0, medical: 0, alimony: 0, rent: 0, education: 0, other: 0, total: 0 },
   totalDeductions: 0,
 };
 

@@ -88,14 +88,14 @@ export const schwyzConfig: CantonalTaxConfig = {
   deductionLimits: {
     professionalExpenses: {
       flatRate: 2400,
-      maxCommuting: 6000,
+      maxCommuting: 8000,      // Updated: CHF 8'000 for private vehicle
       maxMeals: 3200,
       maxOther: 2000,
     },
     insurancePremiums: {
-      single: 2800,
-      married: 5600,
-      perChild: 1400,
+      single: 5200,            // Updated: CHF 5'200 single
+      married: 10400,          // Updated: CHF 10'400 married
+      perChild: 400,           // Updated: CHF 400 per child
     },
     pillar3a: {
       withPension: 7056,
@@ -108,6 +108,9 @@ export const schwyzConfig: CantonalTaxConfig = {
       single: 3500,
       married: 7000,
     },
+    // SZ-specific deductions
+    dualEarnerDeduction: 2100,        // Zweiverdienerabzug
+    educationDeduction: 12000,        // Weiterbildungskosten max
   },
 };
 

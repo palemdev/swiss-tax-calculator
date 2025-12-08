@@ -51,15 +51,18 @@ export function TaxSummary() {
         color="amber"
         icon={<Home className="w-5 h-5 text-amber-500" />}
       />
-      {enableDeductions && (
-        <StatCard
-          label="Total Deductions"
-          value={formatCurrency(results.totalDeductions)}
-          subValue="Tax savings applied"
-          color="purple"
-          icon={<TrendingDown className="w-5 h-5 text-purple-500" />}
-        />
-      )}
+      {enableDeductions && (() => {
+        const combinedDeductions = results.totalDeductions + results.totalDeductionsFederal;
+        return (
+          <StatCard
+            label="Total Deductions"
+            value={formatCurrency(combinedDeductions)}
+            subValue={`Saves ~${formatCurrency(combinedDeductions * results.marginalRate / 100)}`}
+            color="purple"
+            icon={<TrendingDown className="w-5 h-5 text-purple-500" />}
+          />
+        );
+      })()}
     </div>
   );
 }
