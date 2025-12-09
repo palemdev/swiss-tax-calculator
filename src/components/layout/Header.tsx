@@ -1,11 +1,11 @@
-
-import { Calculator, GitCompare, RotateCcw } from 'lucide-react';
+import { Calculator, GitCompare, RotateCcw, Wallet } from 'lucide-react';
 import { useTax } from '../../context/TaxContext';
 import { TAX_YEAR } from '../../data/constants';
+import type { TabType } from '../../App';
 
 interface HeaderProps {
-  activeTab: 'calculator' | 'comparison';
-  onTabChange: (tab: 'calculator' | 'comparison') => void;
+  activeTab: TabType;
+  onTabChange: (tab: TabType) => void;
 }
 
 export function Header({ activeTab, onTabChange }: HeaderProps) {
@@ -51,6 +51,18 @@ export function Header({ activeTab, onTabChange }: HeaderProps) {
             >
               <GitCompare className="w-4 h-4" />
               Compare
+            </button>
+            <button
+              onClick={() => onTabChange('budget')}
+              className={`
+                flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors
+                ${activeTab === 'budget'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'}
+              `}
+            >
+              <Wallet className="w-4 h-4" />
+              Budget
             </button>
           </nav>
 

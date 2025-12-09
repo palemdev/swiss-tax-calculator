@@ -65,6 +65,37 @@ This is a frontend-only Swiss tax calculator built with React, TypeScript, and T
 **Pages** (`src/pages/`)
 - `CalculatorPage` - Main tax calculation with forms and results
 - `ComparisonPage` - Compare taxes across all municipalities
+- `BudgetPage` - Budget calculator with cost of living comparison
+
+## Budget Calculator
+
+The budget calculator integrates with the tax calculator to provide comprehensive financial planning.
+
+**Budget Calculation Engine** (`src/services/budgetCalculator.ts`)
+- `calculateBudget()` - Computes budget breakdown using net income from tax calculation
+- `calculateBudgetComparison()` - Compares disposable income across municipalities (taxes + cost of living)
+- `getBudgetSuggestions()` - Generates budget improvement suggestions
+
+**Cost of Living Data** (`src/data/costOfLiving/`)
+- `{canton}.ts` - Each canton file exports a `CantonCostOfLiving` with rent, health insurance, childcare costs, and cost indices
+- `index.ts` - Aggregates data and provides lookup functions (`getCostOfLiving`, `getAverageRent`, etc.)
+
+**Budget State Management** (`src/context/BudgetContext.tsx`)
+- Integrates with TaxContext (pulls net income automatically)
+- Manages budget inputs, results, and comparison calculations
+- Provides `useBudget()` hook
+
+**Key Budget Types** (`src/types/budget.ts`)
+- `CantonCostOfLiving` - Cantonal cost data (rent, health insurance, childcare, cost indices)
+- `BudgetInputs` - User expense inputs (housing, transport, food, savings, etc.)
+- `BudgetBreakdown` - Calculation results with categories and guidelines
+- `BudgetComparisonResult` - Results combining taxes and cost of living
+
+### Adding Cost of Living for New Cantons
+
+1. Create `src/data/costOfLiving/{canton}.ts` with `CantonCostOfLiving` data
+2. Export from `src/data/costOfLiving/index.ts`
+3. Add to `costOfLivingByCantonCode` record
 
 ## Visualization
 
