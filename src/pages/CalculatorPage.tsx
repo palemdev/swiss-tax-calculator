@@ -9,6 +9,7 @@ import { TaxDistributionPie } from '../components/charts/TaxDistributionPie';
 import { MarginalRateChart } from '../components/charts/MarginalRateChart';
 import { WealthTaxRateChart } from '../components/charts/WealthTaxRateChart';
 import { IncomeBreakdownChart } from '../components/charts/IncomeBreakdownChart';
+import { MarriagePenaltyChart } from '../components/charts/MarriagePenaltyChart';
 
 export function CalculatorPage() {
   return (
@@ -47,6 +48,11 @@ export function CalculatorPage() {
         <div>
           <IncomeBreakdownChart />
         </div>
+      </div>
+
+      {/* Marriage Penalty Chart - Full Width */}
+      <div className="mt-8">
+        <MarriagePenaltyChart />
       </div>
     </div>
   );
