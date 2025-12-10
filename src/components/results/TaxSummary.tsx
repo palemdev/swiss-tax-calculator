@@ -33,7 +33,7 @@ export function TaxSummary() {
       <StatCard
         label="Net Income"
         value={`${formatCurrency(results.netIncome / 12)} / mo`}
-        subValue={`${formatCurrency(results.netIncome)} / year`}
+        subValue={`After tax & AHV/ALV`}
         color="green"
         icon={<PiggyBank className="w-5 h-5 text-green-500" />}
       />

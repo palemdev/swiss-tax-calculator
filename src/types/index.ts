@@ -223,6 +223,12 @@ export interface WealthTaxResult {
   effectiveRate: number;
 }
 
+export interface SocialContributionsBreakdown {
+  ahvIvEo: number;
+  alv: number;
+  total: number;
+}
+
 export interface TaxBreakdown {
   grossIncome: number;
   deductions: DeductionBreakdown;
@@ -238,6 +244,7 @@ export interface TaxBreakdown {
   churchTax: TaxLevelResult;
   wealthTax: WealthTaxResult;
 
+  socialContributions: SocialContributionsBreakdown;
   totalTax: number;
   totalIncomeTax: number;
   effectiveRate: number;

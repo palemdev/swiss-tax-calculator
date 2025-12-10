@@ -59,6 +59,7 @@ export const TAX_COLORS = {
   municipal: '#ec4899',   // Pink
   church: '#6b7280',      // Gray
   wealth: '#f59e0b',      // Amber
+  socialContributions: '#f97316', // Orange
   deductions: '#22c55e',  // Green
   netIncome: '#10b981',   // Emerald
 };

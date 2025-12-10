@@ -48,6 +48,11 @@ export function IncomeBreakdownChart() {
       color: '#ef4444',
     },
     {
+      name: 'Social Contributions',
+      value: results.socialContributions.total,
+      color: '#f97316',
+    },
+    {
       name: 'Net Income',
       value: results.netIncome,
       color: '#10b981',

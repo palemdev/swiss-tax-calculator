@@ -8,6 +8,7 @@ import type {
   WealthTaxResult,
   CantonalTaxConfig,
   Municipality,
+  SocialContributionsBreakdown,
 } from '../types';
 import { getFederalTaxBrackets } from '../data/federalTax';
 import { getCantonConfig, getMunicipalityById } from '../data/cantons';
@@ -458,6 +459,28 @@ function calculateMarginalRate(
   return federalMarginal + adjustedCantonalMarginal;
 }
 
+// Calculate social contributions (AHV/IV/EO and ALV)
+// These are mandatory payroll deductions separate from tax deductions
+export function calculateSocialContributions(grossIncome: number): SocialContributionsBreakdown {
+  // AHV/IV/EO: 5.3% of gross income
+  const ahvIvEo = grossIncome * (SOCIAL_SECURITY_RATES.ahvIvEo / 100);
+
+  // ALV: 1.1% up to cap, 0.5% solidarity above cap
+  let alv = 0;
+  if (grossIncome <= SOCIAL_SECURITY_RATES.alvCap) {
+    alv = grossIncome * (SOCIAL_SECURITY_RATES.alv / 100);
+  } else {
+    alv = SOCIAL_SECURITY_RATES.alvCap * (SOCIAL_SECURITY_RATES.alv / 100) +
+          (grossIncome - SOCIAL_SECURITY_RATES.alvCap) * (SOCIAL_SECURITY_RATES.alvSolidarity / 100);
+  }
+
+  return {
+    ahvIvEo,
+    alv,
+    total: ahvIvEo + alv,
+  };
+}
+
 // Empty deduction breakdown for when deductions are disabled
 const emptyDeductions: DeductionBreakdown = {
   socialSecurity: { ahvIvEo: 0, alv: 0, total: 0 },
@@ -530,6 +553,9 @@ export function calculateTax(input: TaxCalculationInput): TaxBreakdown {
     taxpayer.religion
   );
 
+  // Calculate social contributions (mandatory payroll deductions)
+  const socialContributions = calculateSocialContributions(grossIncome);
+
   // Total income tax (before wealth tax)
   const totalIncomeTax = federalTax.taxAmount + cantonalTax.taxAmount + municipalTax.taxAmount + churchTax.taxAmount;
 
@@ -537,6 +563,9 @@ export function calculateTax(input: TaxCalculationInput): TaxBreakdown {
   const totalTax = totalIncomeTax + wealthTax.totalTax;
   const effectiveRate = grossIncome > 0 ? (totalTax / grossIncome) * 100 : 0;
   const marginalRate = calculateMarginalRate(taxableIncomeCantonal, cantonConfig, municipality, isMarried);
+
+  // Net income = gross income - taxes - social contributions
+  const netIncome = grossIncome - totalTax - socialContributions.total;
 
   return {
     grossIncome,
@@ -551,11 +580,12 @@ export function calculateTax(input: TaxCalculationInput): TaxBreakdown {
     municipalTax,
     churchTax,
     wealthTax,
+    socialContributions,
     totalTax,
     totalIncomeTax,
     effectiveRate,
     marginalRate,
-    netIncome: grossIncome - totalTax,
+    netIncome,
   };
 }
 

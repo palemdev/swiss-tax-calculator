@@ -149,10 +149,29 @@ export function TaxBreakdown() {
         </>
       )}
 
+      <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mt-4 mb-2">Social Contributions</div>
+      <TaxRow
+        label="AHV/IV/EO (5.3%)"
+        amount={results.socialContributions.ahvIvEo}
+        color={TAX_COLORS.socialContributions}
+      />
+      <TaxRow
+        label="ALV (1.1%/0.5%)"
+        amount={results.socialContributions.alv}
+        color={TAX_COLORS.socialContributions}
+      />
+
       <TaxRow
         label="Total Tax"
         amount={results.totalTax}
         rate={results.effectiveRate}
+        color="#111827"
+        isTotal
+      />
+      <TaxRow
+        label="Total Deductions"
+        amount={results.totalTax + results.socialContributions.total}
+        rate={(results.totalTax + results.socialContributions.total) / results.grossIncome * 100}
         color="#111827"
         isTotal
       />
