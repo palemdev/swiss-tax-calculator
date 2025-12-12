@@ -26,6 +26,56 @@ interface ChartDataPoint {
 
 type IncomeDistribution = '50-50' | '70-30' | '100-0';
 
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{ payload: ChartDataPoint }>;
+  label?: number;
+}
+
+function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    const isPenalty = data.penalty > 0;
+    const isBonus = data.penalty < 0;
+
+    return (
+      <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200 min-w-[200px]">
+        <p className="font-medium text-gray-900 border-b pb-2 mb-2">
+          Household income: {formatCurrency(label ?? 0)}
+        </p>
+        <div className="space-y-1 text-sm">
+          <p className="text-gray-600">
+            <span className="inline-block w-3 h-3 rounded-full bg-emerald-500 mr-2"></span>
+            2 Singles: {formatCurrency(data.singleTax)}
+          </p>
+          <p className="text-gray-600">
+            <span className="inline-block w-3 h-3 rounded-full bg-blue-500 mr-2"></span>
+            Married: {formatCurrency(data.marriedTax)}
+          </p>
+          <div className="border-t pt-2 mt-2">
+            {isPenalty && (
+              <p className="text-red-600 font-medium">
+                Marriage penalty: +{formatCurrency(data.penalty)}
+                <span className="text-xs ml-1">({data.penaltyPercent.toFixed(1)}% more)</span>
+              </p>
+            )}
+            {isBonus && (
+              <p className="text-green-600 font-medium">
+                Marriage bonus: {formatCurrency(data.penalty)}
+                <span className="text-xs ml-1">({Math.abs(data.penaltyPercent).toFixed(1)}% less)</span>
+              </p>
+            )}
+            {!isPenalty && !isBonus && (
+              <p className="text-gray-500 font-medium">No difference</p>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
+
 export function MarriagePenaltyChart() {
   const [distribution, setDistribution] = useState<IncomeDistribution>('50-50');
 
@@ -100,50 +150,6 @@ export function MarriagePenaltyChart() {
 
     return { maxPenalty, maxPenaltyIncome, maxBonus, maxBonusIncome, crossoverIncome };
   }, [chartData]);
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload as ChartDataPoint;
-      const isPenalty = data.penalty > 0;
-      const isBonus = data.penalty < 0;
-
-      return (
-        <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200 min-w-[200px]">
-          <p className="font-medium text-gray-900 border-b pb-2 mb-2">
-            Household income: {formatCurrency(label)}
-          </p>
-          <div className="space-y-1 text-sm">
-            <p className="text-gray-600">
-              <span className="inline-block w-3 h-3 rounded-full bg-emerald-500 mr-2"></span>
-              2 Singles: {formatCurrency(data.singleTax)}
-            </p>
-            <p className="text-gray-600">
-              <span className="inline-block w-3 h-3 rounded-full bg-blue-500 mr-2"></span>
-              Married: {formatCurrency(data.marriedTax)}
-            </p>
-            <div className="border-t pt-2 mt-2">
-              {isPenalty && (
-                <p className="text-red-600 font-medium">
-                  Marriage penalty: +{formatCurrency(data.penalty)}
-                  <span className="text-xs ml-1">({data.penaltyPercent.toFixed(1)}% more)</span>
-                </p>
-              )}
-              {isBonus && (
-                <p className="text-green-600 font-medium">
-                  Marriage bonus: {formatCurrency(data.penalty)}
-                  <span className="text-xs ml-1">({Math.abs(data.penaltyPercent).toFixed(1)}% less)</span>
-                </p>
-              )}
-              {!isPenalty && !isBonus && (
-                <p className="text-gray-500 font-medium">No difference</p>
-              )}
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <Card

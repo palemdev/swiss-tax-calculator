@@ -15,6 +15,38 @@ import { Card } from '../common/Card';
 import { formatCurrency, formatChartCurrency } from '../../utils/formatters';
 import { TAX_COLORS } from '../../data/constants';
 
+interface TooltipPayloadEntry {
+  name: string;
+  value: number;
+  color: string;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipPayloadEntry[];
+  label?: string;
+}
+
+function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
+  if (active && payload && payload.length) {
+    const total = payload.reduce((sum: number, p) => sum + p.value, 0);
+    return (
+      <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200">
+        <p className="font-medium text-gray-900 mb-2">{label}</p>
+        {payload.map((entry, index: number) => (
+          <p key={index} className="text-sm" style={{ color: entry.color }}>
+            {entry.name}: {formatCurrency(entry.value)}
+          </p>
+        ))}
+        <p className="text-sm font-medium text-gray-900 mt-2 pt-2 border-t">
+          Total: {formatCurrency(total)}
+        </p>
+      </div>
+    );
+  }
+  return null;
+}
+
 export function ComparisonChart() {
   const { comparisonResults, taxpayer } = useTax();
 
@@ -50,26 +82,6 @@ export function ComparisonChart() {
   if (comparisonResults.length === 0) {
     return null;
   }
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const total = payload.reduce((sum: number, p: any) => sum + p.value, 0);
-      return (
-        <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200">
-          <p className="font-medium text-gray-900 mb-2">{label}</p>
-          {payload.map((entry: any, index: number) => (
-            <p key={index} className="text-sm" style={{ color: entry.color }}>
-              {entry.name}: {formatCurrency(entry.value)}
-            </p>
-          ))}
-          <p className="text-sm font-medium text-gray-900 mt-2 pt-2 border-t">
-            Total: {formatCurrency(total)}
-          </p>
-        </div>
-      );
-    }
-    return null;
-  };
 
   const averageTax =
     comparisonResults.reduce((sum, r) => sum + r.taxBreakdown.totalTax, 0) /

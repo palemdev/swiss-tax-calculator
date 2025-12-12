@@ -36,6 +36,7 @@ export const federalTaxBracketsMarried2025: TaxBracket[] = [
 
 export const getFederalTaxBrackets = (
   tariff: 'single' | 'married',
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _year: number = 2025
 ): TaxBracket[] => {
   // Currently only 2025 data, can be extended for other years

@@ -33,6 +33,44 @@ interface SelectedLocation {
   municipalityId: string;
 }
 
+interface TooltipPayloadEntry {
+  name: string;
+  value: number;
+  color: string;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipPayloadEntry[];
+  label?: number;
+}
+
+function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
+  if (active && payload && payload.length) {
+    // Sort by value to show cheapest first
+    const sorted = [...payload].sort((a, b) => a.value - b.value);
+    return (
+      <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200 max-w-xs">
+        <p className="font-medium text-gray-900 mb-2">
+          Wealth: {formatCurrency(label ?? 0)}
+        </p>
+        {sorted.map((entry, index: number) => (
+          <p key={index} className="text-sm flex justify-between gap-4" style={{ color: entry.color }}>
+            <span>{entry.name}:</span>
+            <span className="font-medium">{formatCurrency(entry.value)}</span>
+          </p>
+        ))}
+        {sorted.length >= 2 && (
+          <p className="text-xs text-gray-500 mt-2 pt-2 border-t">
+            Difference: {formatCurrency(sorted[sorted.length - 1].value - sorted[0].value)}
+          </p>
+        )}
+      </div>
+    );
+  }
+  return null;
+}
+
 export function WealthTaxComparisonChart() {
   const { taxpayer, income, deductions, enableDeductions } = useTax();
 
@@ -70,12 +108,12 @@ export function WealthTaxComparisonChart() {
 
   // Generate data points for all selected locations
   const chartData = useMemo(() => {
-    const dataPoints: Record<string, any>[] = [];
+    const dataPoints: Record<string, number>[] = [];
     const maxWealth = Math.max(3000000, (income.wealth || 1000000) * 2);
     const step = maxWealth / 50;
 
     for (let w = 0; w <= maxWealth; w += step) {
-      const point: Record<string, any> = { wealth: w };
+      const point: Record<string, number> = { wealth: w };
 
       for (const loc of selectedLocations) {
         try {
@@ -107,32 +145,6 @@ export function WealthTaxComparisonChart() {
   });
 
   const currentWealth = income.wealth || 0;
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      // Sort by value to show cheapest first
-      const sorted = [...payload].sort((a, b) => a.value - b.value);
-      return (
-        <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200 max-w-xs">
-          <p className="font-medium text-gray-900 mb-2">
-            Wealth: {formatCurrency(label)}
-          </p>
-          {sorted.map((entry: any, index: number) => (
-            <p key={index} className="text-sm flex justify-between gap-4" style={{ color: entry.color }}>
-              <span>{entry.name}:</span>
-              <span className="font-medium">{formatCurrency(entry.value)}</span>
-            </p>
-          ))}
-          {sorted.length >= 2 && (
-            <p className="text-xs text-gray-500 mt-2 pt-2 border-t">
-              Difference: {formatCurrency(sorted[sorted.length - 1].value - sorted[0].value)}
-            </p>
-          )}
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <Card

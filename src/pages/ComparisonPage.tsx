@@ -16,7 +16,7 @@ export function ComparisonPage() {
     if (results && comparisonResults.length === 0) {
       runComparison();
     }
-  }, [results]);
+  }, [results, comparisonResults.length, runComparison]);
 
   const handleRefresh = () => {
     runComparison();

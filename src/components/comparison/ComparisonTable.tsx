@@ -7,6 +7,36 @@ import { formatCurrency, formatPercentage } from '../../utils/formatters';
 type SortKey = 'ranking' | 'municipality' | 'canton' | 'totalTax' | 'effectiveRate';
 type SortDirection = 'asc' | 'desc';
 
+interface SortHeaderProps {
+  label: string;
+  sortKeyName: SortKey;
+  currentSortKey: SortKey;
+  sortDirection: SortDirection;
+  onSort: (key: SortKey) => void;
+}
+
+function SortHeader({ label, sortKeyName, currentSortKey, sortDirection, onSort }: SortHeaderProps) {
+  return (
+    <th
+      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+      onClick={() => onSort(sortKeyName)}
+    >
+      <div className="flex items-center gap-1">
+        {label}
+        {currentSortKey === sortKeyName ? (
+          sortDirection === 'asc' ? (
+            <ArrowUp className="w-3 h-3" />
+          ) : (
+            <ArrowDown className="w-3 h-3" />
+          )
+        ) : (
+          <ArrowUpDown className="w-3 h-3 text-gray-300" />
+        )}
+      </div>
+    </th>
+  );
+}
+
 export function ComparisonTable() {
   const { comparisonResults, taxpayer, updateTaxpayer } = useTax();
   const [sortKey, setSortKey] = useState<SortKey>('ranking');
@@ -74,26 +104,6 @@ export function ComparisonTable() {
     return current?.taxBreakdown.totalTax ?? 0;
   }, [comparisonResults, taxpayer.canton, taxpayer.municipality]);
 
-  const SortHeader = ({ label, sortKeyName }: { label: string; sortKeyName: SortKey }) => (
-    <th
-      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-      onClick={() => handleSort(sortKeyName)}
-    >
-      <div className="flex items-center gap-1">
-        {label}
-        {sortKey === sortKeyName ? (
-          sortDirection === 'asc' ? (
-            <ArrowUp className="w-3 h-3" />
-          ) : (
-            <ArrowDown className="w-3 h-3" />
-          )
-        ) : (
-          <ArrowUpDown className="w-3 h-3 text-gray-300" />
-        )}
-      </div>
-    </th>
-  );
-
   const handleSelectLocation = (cantonCode: string, municipalityId: string) => {
     updateTaxpayer({
       canton: cantonCode,
@@ -121,11 +131,11 @@ export function ComparisonTable() {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <SortHeader label="Rank" sortKeyName="ranking" />
-              <SortHeader label="Municipality" sortKeyName="municipality" />
-              <SortHeader label="Canton" sortKeyName="canton" />
-              <SortHeader label="Total Tax" sortKeyName="totalTax" />
-              <SortHeader label="Effective Rate" sortKeyName="effectiveRate" />
+              <SortHeader label="Rank" sortKeyName="ranking" currentSortKey={sortKey} sortDirection={sortDirection} onSort={handleSort} />
+              <SortHeader label="Municipality" sortKeyName="municipality" currentSortKey={sortKey} sortDirection={sortDirection} onSort={handleSort} />
+              <SortHeader label="Canton" sortKeyName="canton" currentSortKey={sortKey} sortDirection={sortDirection} onSort={handleSort} />
+              <SortHeader label="Total Tax" sortKeyName="totalTax" currentSortKey={sortKey} sortDirection={sortDirection} onSort={handleSort} />
+              <SortHeader label="Effective Rate" sortKeyName="effectiveRate" currentSortKey={sortKey} sortDirection={sortDirection} onSort={handleSort} />
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Difference
               </th>

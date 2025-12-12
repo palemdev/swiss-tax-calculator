@@ -16,6 +16,36 @@ import { TAX_COLORS } from '../../data/constants';
 import { calculateTax } from '../../services/taxCalculator';
 import { TAX_YEAR } from '../../data/constants';
 
+interface TooltipPayloadEntry {
+  name: string;
+  value: number;
+  color: string;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipPayloadEntry[];
+  label?: number;
+}
+
+function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200">
+        <p className="font-medium text-gray-900">
+          Wealth: {formatCurrency(label ?? 0)}
+        </p>
+        {payload.map((entry, index: number) => (
+          <p key={index} style={{ color: entry.color }} className="text-sm">
+            {entry.name}: {entry.value.toFixed(3)}‰
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+}
+
 export function WealthTaxRateChart() {
   const { taxpayer, income, deductions, enableDeductions } = useTax();
 
@@ -65,24 +95,6 @@ export function WealthTaxRateChart() {
   }, [taxpayer, income.grossIncome, income.wealth, deductions, enableDeductions]);
 
   const currentWealth = income.wealth || 0;
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200">
-          <p className="font-medium text-gray-900">
-            Wealth: {formatCurrency(label)}
-          </p>
-          {payload.map((entry: any, index: number) => (
-            <p key={index} style={{ color: entry.color }} className="text-sm">
-              {entry.name}: {entry.value.toFixed(3)}‰
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
 
   if (!hasWealth) {
     return null; // Don't show chart if no wealth entered

@@ -11,6 +11,11 @@ npm run lint     # Run ESLint
 npm run preview  # Preview production build locally
 ```
 
+**Important:** Always run `npm run lint` after making code changes to ensure there are no linting errors. The project uses strict ESLint rules including:
+- No `any` types (`@typescript-eslint/no-explicit-any`)
+- No components created during render (`react-hooks/static-components`)
+- Exhaustive deps for React hooks (`react-hooks/exhaustive-deps`)
+
 ## Architecture
 
 This is a frontend-only Swiss tax calculator built with React, TypeScript, and Tailwind CSS. It calculates federal, cantonal, and municipal taxes for Swiss residents.

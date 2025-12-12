@@ -13,6 +13,30 @@ import { useTax } from '../../context/TaxContext';
 import { Card } from '../common/Card';
 import { formatCurrency, formatChartCurrency } from '../../utils/formatters';
 
+interface ChartDataItem {
+  name: string;
+  value: number;
+  color: string;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{ payload: ChartDataItem }>;
+}
+
+function CustomTooltip({ active, payload }: CustomTooltipProps) {
+  if (active && payload && payload.length) {
+    const { name, value } = payload[0].payload;
+    return (
+      <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200">
+        <p className="font-medium text-gray-900">{name}</p>
+        <p className="text-gray-600">{formatCurrency(value)}</p>
+      </div>
+    );
+  }
+  return null;
+}
+
 export function IncomeBreakdownChart() {
   const { results } = useTax();
 
@@ -26,7 +50,7 @@ export function IncomeBreakdownChart() {
     );
   }
 
-  const data = [
+  const data: ChartDataItem[] = [
     {
       name: 'Gross Income',
       value: results.grossIncome,
@@ -58,19 +82,6 @@ export function IncomeBreakdownChart() {
       color: '#10b981',
     },
   ];
-
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      const { name, value } = payload[0].payload;
-      return (
-        <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200">
-          <p className="font-medium text-gray-900">{name}</p>
-          <p className="text-gray-600">{formatCurrency(value)}</p>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <Card title="Income Breakdown" subtitle="From gross to net income">
