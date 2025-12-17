@@ -496,19 +496,25 @@ function calculateMarginalRate(
   // Add social contribution marginal rates
   let socialMarginalRate = 0;
 
-  if (employmentStatus === 'employed' || employmentStatus === 'mixed') {
+  if (employmentStatus === 'employed') {
     // Employed: AHV 5.3% + ALV (1.1% below cap, 0.5% above cap)
-    socialMarginalRate += SOCIAL_SECURITY_RATES.ahvIvEo;
+    socialMarginalRate = SOCIAL_SECURITY_RATES.ahvIvEo;
     if (employedIncome <= SOCIAL_SECURITY_RATES.alvCap) {
       socialMarginalRate += SOCIAL_SECURITY_RATES.alv;
     } else {
       socialMarginalRate += SOCIAL_SECURITY_RATES.alvSolidarity;
     }
-  }
-
-  if (employmentStatus === 'self-employed' || employmentStatus === 'mixed') {
+  } else if (employmentStatus === 'self-employed') {
     // Self-employed: use current AHV rate from degressive scale
-    socialMarginalRate += getSelfEmployedAHVRate(selfEmployedIncome);
+    socialMarginalRate = getSelfEmployedAHVRate(selfEmployedIncome);
+  } else if (employmentStatus === 'mixed') {
+    // Mixed: use the higher of the two rates (marginal rate on next CHF earned)
+    const employedRate = SOCIAL_SECURITY_RATES.ahvIvEo +
+      (employedIncome <= SOCIAL_SECURITY_RATES.alvCap
+        ? SOCIAL_SECURITY_RATES.alv
+        : SOCIAL_SECURITY_RATES.alvSolidarity);
+    const selfEmployedRate = getSelfEmployedAHVRate(selfEmployedIncome);
+    socialMarginalRate = Math.max(employedRate, selfEmployedRate);
   }
 
   return federalMarginal + adjustedCantonalMarginal + socialMarginalRate;
