@@ -150,16 +150,34 @@ export function TaxBreakdown() {
       )}
 
       <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mt-4 mb-2">Social Contributions</div>
-      <TaxRow
-        label="AHV/IV/EO (5.3%)"
-        amount={results.socialContributions.ahvIvEo}
-        color={TAX_COLORS.socialContributions}
-      />
-      <TaxRow
-        label="ALV (1.1%/0.5%)"
-        amount={results.socialContributions.alv}
-        color={TAX_COLORS.socialContributions}
-      />
+      {results.socialContributions.ahvIvEoEmployed > 0 && (
+        <TaxRow
+          label="AHV/IV/EO (Employed, 5.3%)"
+          amount={results.socialContributions.ahvIvEoEmployed}
+          color={TAX_COLORS.socialContributions}
+        />
+      )}
+      {results.socialContributions.ahvIvEoSelfEmployed > 0 && (
+        <TaxRow
+          label="AHV/IV/EO (Self-employed)"
+          amount={results.socialContributions.ahvIvEoSelfEmployed}
+          color={TAX_COLORS.socialContributions}
+        />
+      )}
+      {results.socialContributions.ahvIvEoEmployed === 0 && results.socialContributions.ahvIvEoSelfEmployed === 0 && (
+        <TaxRow
+          label="AHV/IV/EO"
+          amount={0}
+          color={TAX_COLORS.socialContributions}
+        />
+      )}
+      {results.socialContributions.alv > 0 && (
+        <TaxRow
+          label="ALV (1.1%/0.5%)"
+          amount={results.socialContributions.alv}
+          color={TAX_COLORS.socialContributions}
+        />
+      )}
 
       <TaxRow
         label="Total Tax"

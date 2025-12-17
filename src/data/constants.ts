@@ -6,6 +6,7 @@ export const TAX_YEAR = 2025;
 export const PILLAR_3A_LIMITS = {
   withPension: 7056,      // For employees with employer pension (BVG)
   withoutPension: 35280,  // For self-employed without pension (20% of net income, max)
+  selfEmployedPercentage: 20, // Self-employed without BVG: 20% of net income
 };
 
 // AHV/IV/EO Contribution rates (employee portion)
@@ -14,6 +15,26 @@ export const SOCIAL_SECURITY_RATES = {
   alv: 1.1,        // Unemployment insurance (up to cap)
   alvSolidarity: 0.5, // ALV solidarity contribution (above cap)
   alvCap: 148200,  // Maximum income for regular ALV rate
+};
+
+// Self-employed AHV/IV/EO rates (degressive scale)
+// Self-employed pay the full rate (not split with employer)
+export const SELF_EMPLOYED_AHV_RATES = {
+  minimumContribution: 514,      // Minimum annual contribution
+  minimumIncomeThreshold: 9800,  // Below this, pay minimum
+  fullRateThreshold: 58800,      // Above this, pay full 10.6%
+  fullRate: 10.6,                // Full rate percentage
+  // Degressive scale for incomes between minimum and full rate threshold
+  scale: [
+    { minIncome: 9800, maxIncome: 17800, rate: 5.371 },
+    { minIncome: 17800, maxIncome: 24000, rate: 6.642 },
+    { minIncome: 24000, maxIncome: 30200, rate: 7.478 },
+    { minIncome: 30200, maxIncome: 36400, rate: 8.127 },
+    { minIncome: 36400, maxIncome: 42600, rate: 8.683 },
+    { minIncome: 42600, maxIncome: 48800, rate: 9.188 },
+    { minIncome: 48800, maxIncome: 55000, rate: 9.660 },
+    { minIncome: 55000, maxIncome: 58800, rate: 10.113 },
+  ],
 };
 
 // Federal tax thresholds
@@ -80,4 +101,11 @@ export const RELIGION_OPTIONS = [
   { value: 'protestant', label: 'Protestant', labelDe: 'Evangelisch-reformiert' },
   { value: 'christCatholic', label: 'Christ Catholic', labelDe: 'Christkatholisch' },
   { value: 'other', label: 'Other (no church tax)', labelDe: 'Andere (keine Kirchensteuer)' },
+] as const;
+
+// Employment status options
+export const EMPLOYMENT_STATUS_OPTIONS = [
+  { value: 'employed', label: 'Employed', labelDe: 'Arbeitnehmer/in' },
+  { value: 'self-employed', label: 'Self-employed', labelDe: 'Selbständigerwerbend' },
+  { value: 'mixed', label: 'Both employed and self-employed', labelDe: 'Angestellt und selbständig' },
 ] as const;

@@ -7,10 +7,12 @@ import { formatCurrency, formatPercentage } from '../../utils/formatters';
 export function TaxSummary() {
   const { results, enableDeductions } = useTax();
 
+  const gridCols = enableDeductions ? 'lg:grid-cols-5' : 'lg:grid-cols-4';
+
   if (!results) {
     return (
-      <div className={`grid grid-cols-2 ${enableDeductions ? 'lg:grid-cols-5' : 'lg:grid-cols-4'} gap-4`}>
-        <StatCard label="Total Tax" value="--" color="red" />
+      <div className={`grid grid-cols-2 ${gridCols} gap-4`}>
+        <StatCard label="Total Costs" value="--" color="red" />
         <StatCard label="Net Income" value="--" color="green" />
         <StatCard label="Effective Rate" value="--" color="blue" />
         <StatCard label="Max Rent" value="--" color="amber" />
@@ -20,20 +22,21 @@ export function TaxSummary() {
   }
 
   const maxRent = (results.netIncome / 12) * 0.3;
+  const totalMandatoryCosts = results.totalTax + results.socialContributions.total;
 
   return (
-    <div className={`grid grid-cols-2 ${enableDeductions ? 'lg:grid-cols-5' : 'lg:grid-cols-4'} gap-4`}>
+    <div className={`grid grid-cols-2 ${gridCols} gap-4`}>
       <StatCard
-        label="Total Tax"
-        value={formatCurrency(results.totalTax)}
-        subValue={`${formatPercentage(results.effectiveRate)} of gross`}
+        label="Total Costs"
+        value={formatCurrency(totalMandatoryCosts)}
+        subValue={`Tax + AHV/ALV`}
         color="red"
         icon={<Wallet className="w-5 h-5 text-red-500" />}
       />
       <StatCard
         label="Net Income"
         value={`${formatCurrency(results.netIncome / 12)} / mo`}
-        subValue={`After tax & AHV/ALV`}
+        subValue={`${formatCurrency(results.netIncome)} / yr`}
         color="green"
         icon={<PiggyBank className="w-5 h-5 text-green-500" />}
       />

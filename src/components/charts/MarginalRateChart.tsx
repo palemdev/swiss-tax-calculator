@@ -50,6 +50,10 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
 export function MarginalRateChart() {
   const { results, taxpayer, deductions, enableDeductions } = useTax();
 
+  const employmentStatus = taxpayer.employmentStatus ?? 'employed';
+  const isSelfEmployed = employmentStatus === 'self-employed';
+  const isMixed = employmentStatus === 'mixed';
+
   // Generate data points for the chart
   const chartData = useMemo(() => {
     const dataPoints: {
@@ -64,16 +68,35 @@ export function MarginalRateChart() {
 
     for (let inc = 0; inc <= maxIncome; inc += step) {
       try {
+        // Build income object based on employment status
+        const incomeForCalc = isSelfEmployed
+          ? {
+              grossIncome: 0,
+              wealth: 0,
+              selfEmployedIncome: { netBusinessIncome: inc },
+            }
+          : isMixed
+          ? {
+              grossIncome: inc / 2, // Split evenly for mixed
+              wealth: 0,
+              selfEmployedIncome: { netBusinessIncome: inc / 2 },
+            }
+          : {
+              grossIncome: inc,
+              wealth: 0,
+            };
+
         const result = calculateTax({
           year: TAX_YEAR,
           taxpayer,
-          income: { grossIncome: inc, wealth: 0 }, // Exclude wealth for income tax chart
+          income: incomeForCalc,
           deductions,
           enableDeductions,
         });
 
-        // Calculate income-only effective rate (exclude wealth tax)
-        const incomeEffectiveRate = inc > 0 ? (result.totalIncomeTax / inc) * 100 : 0;
+        // Calculate income-only effective rate (exclude wealth tax but include social contributions)
+        const totalIncomeCosts = result.totalIncomeTax + result.socialContributions.total;
+        const incomeEffectiveRate = inc > 0 ? (totalIncomeCosts / inc) * 100 : 0;
 
         dataPoints.push({
           income: inc,
@@ -90,7 +113,7 @@ export function MarginalRateChart() {
     }
 
     return dataPoints;
-  }, [taxpayer, deductions, enableDeductions, results]);
+  }, [taxpayer, deductions, enableDeductions, results, isSelfEmployed, isMixed]);
 
   const currentIncome = results?.grossIncome || 0;
 

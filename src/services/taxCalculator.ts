@@ -9,10 +9,12 @@ import type {
   CantonalTaxConfig,
   Municipality,
   SocialContributionsBreakdown,
+  EmploymentStatus,
 } from '../types';
 import { getFederalTaxBrackets } from '../data/federalTax';
 import { getCantonConfig, getMunicipalityById } from '../data/cantons';
 import { PILLAR_3A_LIMITS, FEDERAL_DEDUCTION_LIMITS, SOCIAL_SECURITY_RATES } from '../data/constants';
+import { calculateSelfEmployedAHV, calculateMaxPillar3a, getSelfEmployedAHVRate } from './selfEmployedCalculator';
 
 // Calculate tax using progressive brackets
 function calculateTaxFromBrackets(taxableIncome: number, brackets: TaxBracket[]): { tax: number; marginalRate: number } {
@@ -73,26 +75,46 @@ type DeductionLimits = {
   childEducationDeduction?: number;
 };
 
+// Context for self-employed deduction calculations
+interface SelfEmployedDeductionContext {
+  employmentStatus: EmploymentStatus;
+  selfEmployedAHV: number;
+  selfEmployedNetIncome: number;
+}
+
 // Calculate deductions using provided limits
 export function calculateDeductions(
   input: TaxCalculationInput,
-  limits: DeductionLimits
+  limits: DeductionLimits,
+  selfEmployedContext?: SelfEmployedDeductionContext
 ): DeductionBreakdown {
   const { taxpayer, income, deductions } = input;
   const isMarried = taxpayer.civilStatus === 'married';
-  const grossIncome = income.grossIncome;
+  const employedIncome = income.grossIncome;
+  const employmentStatus = selfEmployedContext?.employmentStatus ?? taxpayer.employmentStatus ?? 'employed';
 
-  // Social security contributions (AHV/IV/EO and ALV)
-  const ahvIvEo = grossIncome * (SOCIAL_SECURITY_RATES.ahvIvEo / 100);
-
-  // ALV: 1.1% up to cap, 0.5% solidarity above cap
+  // Social security contributions depend on employment status
+  let ahvIvEo = 0;
   let alv = 0;
-  if (grossIncome <= SOCIAL_SECURITY_RATES.alvCap) {
-    alv = grossIncome * (SOCIAL_SECURITY_RATES.alv / 100);
-  } else {
-    alv = SOCIAL_SECURITY_RATES.alvCap * (SOCIAL_SECURITY_RATES.alv / 100) +
-          (grossIncome - SOCIAL_SECURITY_RATES.alvCap) * (SOCIAL_SECURITY_RATES.alvSolidarity / 100);
+
+  // Employed portion: AHV/IV/EO and ALV on salary
+  if (employmentStatus === 'employed' || employmentStatus === 'mixed') {
+    ahvIvEo += employedIncome * (SOCIAL_SECURITY_RATES.ahvIvEo / 100);
+
+    // ALV: 1.1% up to cap, 0.5% solidarity above cap
+    if (employedIncome <= SOCIAL_SECURITY_RATES.alvCap) {
+      alv = employedIncome * (SOCIAL_SECURITY_RATES.alv / 100);
+    } else {
+      alv = SOCIAL_SECURITY_RATES.alvCap * (SOCIAL_SECURITY_RATES.alv / 100) +
+            (employedIncome - SOCIAL_SECURITY_RATES.alvCap) * (SOCIAL_SECURITY_RATES.alvSolidarity / 100);
+    }
   }
+
+  // Self-employed portion: Full AHV/IV/EO (no ALV)
+  if ((employmentStatus === 'self-employed' || employmentStatus === 'mixed') && selfEmployedContext) {
+    ahvIvEo += selfEmployedContext.selfEmployedAHV;
+  }
+
   const socialSecurityTotal = ahvIvEo + alv;
 
   // Professional expenses
@@ -121,9 +143,21 @@ export function calculateDeductions(
 
   // Pension contributions
   const pillar2 = deductions.pillar2Contributions;
-  const maxPillar3a = deductions.hasEmployerPension
-    ? PILLAR_3A_LIMITS.withPension
-    : PILLAR_3A_LIMITS.withoutPension;
+
+  // Pillar 3a limit depends on employment status and pension coverage
+  let maxPillar3a: number;
+  if (selfEmployedContext && (employmentStatus === 'self-employed' || employmentStatus === 'mixed')) {
+    // Self-employed: use special calculation based on hasEmployerPension
+    maxPillar3a = calculateMaxPillar3a(
+      selfEmployedContext.selfEmployedNetIncome,
+      deductions.hasEmployerPension
+    );
+  } else {
+    // Employed: standard limits
+    maxPillar3a = deductions.hasEmployerPension
+      ? PILLAR_3A_LIMITS.withPension
+      : PILLAR_3A_LIMITS.withoutPension;
+  }
   const pillar3a = Math.min(deductions.pillar3aContributions, maxPillar3a);
   const pensionTotal = pillar2 + pillar3a;
 
@@ -438,12 +472,15 @@ export function calculateWealthTax(
   };
 }
 
-// Calculate marginal rate (combined)
+// Calculate marginal rate (combined taxes + social contributions)
 function calculateMarginalRate(
   taxableIncome: number,
   cantonConfig: CantonalTaxConfig,
   municipality: Municipality,
-  isMarried: boolean
+  isMarried: boolean,
+  employmentStatus: EmploymentStatus,
+  employedIncome: number,
+  selfEmployedIncome: number
 ): number {
   // Federal marginal rate
   const federalBrackets = getFederalTaxBrackets(isMarried ? 'married' : 'single');
@@ -456,28 +493,66 @@ function calculateMarginalRate(
   const totalMultiplier = (cantonConfig.taxMultiplier + municipality.taxMultiplier) / 100;
   const adjustedCantonalMarginal = cantonalMarginal * totalMultiplier;
 
-  return federalMarginal + adjustedCantonalMarginal;
+  // Add social contribution marginal rates
+  let socialMarginalRate = 0;
+
+  if (employmentStatus === 'employed' || employmentStatus === 'mixed') {
+    // Employed: AHV 5.3% + ALV (1.1% below cap, 0.5% above cap)
+    socialMarginalRate += SOCIAL_SECURITY_RATES.ahvIvEo;
+    if (employedIncome <= SOCIAL_SECURITY_RATES.alvCap) {
+      socialMarginalRate += SOCIAL_SECURITY_RATES.alv;
+    } else {
+      socialMarginalRate += SOCIAL_SECURITY_RATES.alvSolidarity;
+    }
+  }
+
+  if (employmentStatus === 'self-employed' || employmentStatus === 'mixed') {
+    // Self-employed: use current AHV rate from degressive scale
+    socialMarginalRate += getSelfEmployedAHVRate(selfEmployedIncome);
+  }
+
+  return federalMarginal + adjustedCantonalMarginal + socialMarginalRate;
 }
 
 // Calculate social contributions (AHV/IV/EO and ALV)
 // These are mandatory payroll deductions separate from tax deductions
-export function calculateSocialContributions(grossIncome: number): SocialContributionsBreakdown {
-  // AHV/IV/EO: 5.3% of gross income
-  const ahvIvEo = grossIncome * (SOCIAL_SECURITY_RATES.ahvIvEo / 100);
+export function calculateSocialContributions(
+  employedIncome: number,
+  selfEmployedIncome: number,
+  employmentStatus: EmploymentStatus
+): SocialContributionsBreakdown {
+  let ahvIvEoEmployed = 0;
+  let alvEmployed = 0;
+  let ahvIvEoSelfEmployed = 0;
 
-  // ALV: 1.1% up to cap, 0.5% solidarity above cap
-  let alv = 0;
-  if (grossIncome <= SOCIAL_SECURITY_RATES.alvCap) {
-    alv = grossIncome * (SOCIAL_SECURITY_RATES.alv / 100);
-  } else {
-    alv = SOCIAL_SECURITY_RATES.alvCap * (SOCIAL_SECURITY_RATES.alv / 100) +
-          (grossIncome - SOCIAL_SECURITY_RATES.alvCap) * (SOCIAL_SECURITY_RATES.alvSolidarity / 100);
+  // Employed contributions
+  if (employmentStatus === 'employed' || employmentStatus === 'mixed') {
+    // AHV/IV/EO: 5.3% of employed income
+    ahvIvEoEmployed = employedIncome * (SOCIAL_SECURITY_RATES.ahvIvEo / 100);
+
+    // ALV: 1.1% up to cap, 0.5% solidarity above cap
+    if (employedIncome <= SOCIAL_SECURITY_RATES.alvCap) {
+      alvEmployed = employedIncome * (SOCIAL_SECURITY_RATES.alv / 100);
+    } else {
+      alvEmployed = SOCIAL_SECURITY_RATES.alvCap * (SOCIAL_SECURITY_RATES.alv / 100) +
+            (employedIncome - SOCIAL_SECURITY_RATES.alvCap) * (SOCIAL_SECURITY_RATES.alvSolidarity / 100);
+    }
   }
 
+  // Self-employed contributions (no ALV for self-employed)
+  if (employmentStatus === 'self-employed' || employmentStatus === 'mixed') {
+    ahvIvEoSelfEmployed = calculateSelfEmployedAHV(selfEmployedIncome);
+  }
+
+  const totalAhvIvEo = ahvIvEoEmployed + ahvIvEoSelfEmployed;
+
   return {
-    ahvIvEo,
-    alv,
-    total: ahvIvEo + alv,
+    ahvIvEoEmployed,
+    alvEmployed,
+    ahvIvEoSelfEmployed,
+    ahvIvEo: totalAhvIvEo,
+    alv: alvEmployed,
+    total: totalAhvIvEo + alvEmployed,
   };
 }
 
@@ -505,17 +580,42 @@ export function calculateTax(input: TaxCalculationInput): TaxBreakdown {
   }
 
   const isMarried = taxpayer.civilStatus === 'married';
+  const employmentStatus = taxpayer.employmentStatus ?? 'employed';
 
-  // Get gross income
-  const grossIncome = income.grossIncome;
+  // Calculate income based on employment status
+  const employedIncome = (employmentStatus === 'employed' || employmentStatus === 'mixed')
+    ? income.grossIncome
+    : 0;
+  const selfEmployedNetIncome = (employmentStatus === 'self-employed' || employmentStatus === 'mixed')
+    ? (income.selfEmployedIncome?.netBusinessIncome ?? 0)
+    : 0;
+
+  // Calculate self-employed AHV first (needed for deductions)
+  const selfEmployedAHV = (employmentStatus === 'self-employed' || employmentStatus === 'mixed')
+    ? calculateSelfEmployedAHV(selfEmployedNetIncome)
+    : 0;
+
+  // Total gross income for tax purposes
+  // Note: For self-employed, we use net business income (after business expenses)
+  const grossIncome = employedIncome + selfEmployedNetIncome;
+
+  // Context for self-employed deduction calculations
+  const selfEmployedContext: SelfEmployedDeductionContext | undefined =
+    (employmentStatus === 'self-employed' || employmentStatus === 'mixed')
+      ? {
+          employmentStatus,
+          selfEmployedAHV,
+          selfEmployedNetIncome,
+        }
+      : undefined;
 
   // Calculate deductions (or use empty deductions if disabled)
   let federalDeductions: DeductionBreakdown;
   let cantonalDeductions: DeductionBreakdown;
 
   if (enableDeductions) {
-    federalDeductions = calculateDeductions(input, FEDERAL_DEDUCTION_LIMITS);
-    cantonalDeductions = calculateDeductions(input, cantonConfig.deductionLimits);
+    federalDeductions = calculateDeductions(input, FEDERAL_DEDUCTION_LIMITS, selfEmployedContext);
+    cantonalDeductions = calculateDeductions(input, cantonConfig.deductionLimits, selfEmployedContext);
   } else {
     federalDeductions = emptyDeductions;
     cantonalDeductions = emptyDeductions;
@@ -554,15 +654,30 @@ export function calculateTax(input: TaxCalculationInput): TaxBreakdown {
   );
 
   // Calculate social contributions (mandatory payroll deductions)
-  const socialContributions = calculateSocialContributions(grossIncome);
+  const socialContributions = calculateSocialContributions(
+    employedIncome,
+    selfEmployedNetIncome,
+    employmentStatus
+  );
 
   // Total income tax (before wealth tax)
   const totalIncomeTax = federalTax.taxAmount + cantonalTax.taxAmount + municipalTax.taxAmount + churchTax.taxAmount;
 
   // Total tax (income + wealth)
   const totalTax = totalIncomeTax + wealthTax.totalTax;
-  const effectiveRate = grossIncome > 0 ? (totalTax / grossIncome) * 100 : 0;
-  const marginalRate = calculateMarginalRate(taxableIncomeCantonal, cantonConfig, municipality, isMarried);
+
+  // Effective rate includes taxes AND social contributions (total mandatory costs)
+  const totalMandatoryCosts = totalTax + socialContributions.total;
+  const effectiveRate = grossIncome > 0 ? (totalMandatoryCosts / grossIncome) * 100 : 0;
+  const marginalRate = calculateMarginalRate(
+    taxableIncomeCantonal,
+    cantonConfig,
+    municipality,
+    isMarried,
+    employmentStatus,
+    employedIncome,
+    selfEmployedNetIncome
+  );
 
   // Net income = gross income - taxes - social contributions
   const netIncome = grossIncome - totalTax - socialContributions.total;

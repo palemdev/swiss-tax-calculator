@@ -29,7 +29,7 @@ interface StatCardProps {
   label: string;
   value: string;
   subValue?: string;
-  color?: 'default' | 'green' | 'red' | 'blue' | 'purple' | 'amber';
+  color?: 'default' | 'green' | 'red' | 'blue' | 'purple' | 'amber' | 'orange';
   icon?: React.ReactNode;
 }
 
@@ -41,6 +41,7 @@ export function StatCard({ label, value, subValue, color = 'default', icon }: St
     blue: 'bg-blue-50 border-blue-200',
     purple: 'bg-purple-50 border-purple-200',
     amber: 'bg-amber-50 border-amber-200',
+    orange: 'bg-orange-50 border-orange-200',
   };
 
   const textColorClasses = {
@@ -50,6 +51,7 @@ export function StatCard({ label, value, subValue, color = 'default', icon }: St
     blue: 'text-blue-700',
     purple: 'text-purple-700',
     amber: 'text-amber-700',
+    orange: 'text-orange-700',
   };
 
   return (

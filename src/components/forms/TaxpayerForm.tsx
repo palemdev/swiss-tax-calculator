@@ -4,10 +4,11 @@ import { Select } from '../common/Select';
 import { Input } from '../common/Input';
 import { Card } from '../common/Card';
 import { cantonList, getMunicipalitiesByCantonCode } from '../../data/cantons';
-import { CIVIL_STATUS_OPTIONS, RELIGION_OPTIONS } from '../../data/constants';
+import { CIVIL_STATUS_OPTIONS, RELIGION_OPTIONS, EMPLOYMENT_STATUS_OPTIONS } from '../../data/constants';
+import type { EmploymentStatus } from '../../types';
 
 export function TaxpayerForm() {
-  const { taxpayer, updateTaxpayer } = useTax();
+  const { taxpayer, updateTaxpayer, updateIncome, income } = useTax();
 
   const municipalities = getMunicipalitiesByCantonCode(taxpayer.canton);
   const isMarried = taxpayer.civilStatus === 'married';
@@ -21,9 +22,34 @@ export function TaxpayerForm() {
     });
   };
 
+  // Handle employment status change
+  const handleEmploymentStatusChange = (status: EmploymentStatus) => {
+    updateTaxpayer({ employmentStatus: status });
+
+    // Initialize self-employed income if switching to self-employed or mixed
+    if ((status === 'self-employed' || status === 'mixed') && !income.selfEmployedIncome?.netBusinessIncome) {
+      updateIncome({
+        selfEmployedIncome: { netBusinessIncome: 150000 },
+      });
+    }
+
+    // Clear employed income if purely self-employed
+    if (status === 'self-employed') {
+      updateIncome({ grossIncome: 0 });
+    }
+  };
+
   return (
     <Card title="Personal Information" subtitle="Your tax profile">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
+        <Select
+          label="Employment Status"
+          value={taxpayer.employmentStatus}
+          onChange={(value) => handleEmploymentStatusChange(value as EmploymentStatus)}
+          options={EMPLOYMENT_STATUS_OPTIONS.map(opt => ({ value: opt.value, label: opt.label }))}
+          tooltip="Your employment type affects social security contributions and deduction limits"
+        />
+
         <Select
           label="Civil Status"
           value={taxpayer.civilStatus}

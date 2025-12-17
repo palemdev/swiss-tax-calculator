@@ -15,17 +15,21 @@ import { TAX_YEAR } from '../data/constants';
 // Initial state values
 const initialTaxpayer: TaxpayerProfile = {
   civilStatus: 'single',
-  canton: 'SZ',
-  municipality: 'sz-arth',
+  canton: 'ZG',
+  municipality: 'zg-zug',
   religion: 'none',
   partnerReligion: 'none',
   numberOfChildren: 0,
   childrenInChildcare: 0,
+  // Employment status
+  employmentStatus: 'employed',
 };
 
 const initialIncome: IncomeDetails = {
   grossIncome: 150000,
   wealth: 0,
+  // Self-employed income (optional)
+  selfEmployedIncome: undefined,
 };
 
 const initialDeductions: DeductionInputs = {
@@ -41,7 +45,7 @@ const initialDeductions: DeductionInputs = {
   childcareExpenses: 0,
   alimonyPaid: 0,
   // Canton-specific deductions
-  rentExpenses: 0,
+  rentExpenses: 36000,  // Default to get max Zug rent deduction (30% of 36k = 10,800)
   educationExpenses: 0,
   usesSelfCareDeduction: false,
   childrenInEducation: 0,

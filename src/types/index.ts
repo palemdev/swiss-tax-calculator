@@ -97,6 +97,11 @@ export interface Municipality {
 
 export type CivilStatus = 'single' | 'married' | 'divorced' | 'widowed' | 'separated';
 export type Religion = 'none' | 'catholic' | 'protestant' | 'christCatholic' | 'other';
+export type EmploymentStatus = 'employed' | 'self-employed' | 'mixed';
+
+export interface SelfEmployedIncome {
+  netBusinessIncome: number;
+}
 
 export interface TaxpayerProfile {
   civilStatus: CivilStatus;
@@ -106,11 +111,15 @@ export interface TaxpayerProfile {
   partnerReligion: Religion;
   numberOfChildren: number;
   childrenInChildcare: number;
+  // Employment status
+  employmentStatus: EmploymentStatus;
 }
 
 export interface IncomeDetails {
-  grossIncome: number;
+  grossIncome: number; // Employment income (salary)
   wealth: number;
+  // Self-employed income
+  selfEmployedIncome?: SelfEmployedIncome;
 }
 
 export interface DeductionInputs {
@@ -224,8 +233,14 @@ export interface WealthTaxResult {
 }
 
 export interface SocialContributionsBreakdown {
-  ahvIvEo: number;
-  alv: number;
+  // Employed contributions (employee portion)
+  ahvIvEoEmployed: number;
+  alvEmployed: number;
+  // Self-employed contributions (full rate)
+  ahvIvEoSelfEmployed: number;
+  // Totals
+  ahvIvEo: number; // Combined AHV/IV/EO
+  alv: number;     // Only from employment (self-employed don't pay ALV)
   total: number;
 }
 

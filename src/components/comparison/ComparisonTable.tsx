@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { ArrowUpDown, ArrowUp, ArrowDown, MapPin } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, MapPin, Info } from 'lucide-react';
 import { useTax } from '../../context/TaxContext';
 import { Card } from '../common/Card';
 import { formatCurrency, formatPercentage } from '../../utils/formatters';
@@ -38,10 +38,13 @@ function SortHeader({ label, sortKeyName, currentSortKey, sortDirection, onSort 
 }
 
 export function ComparisonTable() {
-  const { comparisonResults, taxpayer, updateTaxpayer } = useTax();
+  const { comparisonResults, taxpayer, updateTaxpayer, results } = useTax();
   const [sortKey, setSortKey] = useState<SortKey>('ranking');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [filter, setFilter] = useState('');
+
+  const isSelfEmployed = taxpayer.employmentStatus === 'self-employed' || taxpayer.employmentStatus === 'mixed';
+  const socialContributions = results?.socialContributions.total ?? 0;
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -117,6 +120,16 @@ export function ComparisonTable() {
 
   return (
     <Card title="Tax Comparison" subtitle={`Comparing ${comparisonResults.length} locations`}>
+      {isSelfEmployed && socialContributions > 0 && (
+        <div className="mb-4 p-3 bg-orange-50 border border-orange-200 rounded-lg flex items-start gap-2">
+          <Info className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
+          <div className="text-sm text-gray-700">
+            <span className="font-medium">Note:</span> Social contributions (AHV/IV/EO) of{' '}
+            <span className="font-medium">{formatCurrency(socialContributions)}</span> are the same
+            regardless of location. The comparison below shows only location-dependent taxes.
+          </div>
+        </div>
+      )}
       <div className="mb-4">
         <input
           type="text"
