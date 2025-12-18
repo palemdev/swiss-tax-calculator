@@ -22,7 +22,7 @@ export function Header({ activeTab, onTabChange }: HeaderProps) {
             </div>
             <div>
               <h1 className="text-xl font-bold text-gray-900">Swiss Tax Calculator</h1>
-              <p className="text-xs text-gray-500">Tax Year {TAX_YEAR}</p>
+              <p className="text-xs text-gray-500 hidden sm:block">Tax Year {TAX_YEAR}</p>
             </div>
           </div>
 
@@ -31,48 +31,48 @@ export function Header({ activeTab, onTabChange }: HeaderProps) {
             <button
               onClick={() => onTabChange('calculator')}
               className={`
-                flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors
+                flex items-center gap-2 px-2 sm:px-4 py-2 rounded-md text-sm font-medium transition-colors
                 ${activeTab === 'calculator'
                   ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'}
               `}
             >
               <Calculator className="w-4 h-4" />
-              Calculator
+              <span className="hidden sm:inline">Calculator</span>
             </button>
             <button
               onClick={() => onTabChange('comparison')}
               className={`
-                flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors
+                flex items-center gap-2 px-2 sm:px-4 py-2 rounded-md text-sm font-medium transition-colors
                 ${activeTab === 'comparison'
                   ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'}
               `}
             >
               <GitCompare className="w-4 h-4" />
-              Compare
+              <span className="hidden sm:inline">Compare</span>
             </button>
             <button
               onClick={() => onTabChange('budget')}
               className={`
-                flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors
+                flex items-center gap-2 px-2 sm:px-4 py-2 rounded-md text-sm font-medium transition-colors
                 ${activeTab === 'budget'
                   ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'}
               `}
             >
               <Wallet className="w-4 h-4" />
-              Budget
+              <span className="hidden sm:inline">Budget</span>
             </button>
           </nav>
 
           {/* Reset Button */}
           <button
             onClick={reset}
-            className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+            className="flex items-center gap-2 px-2 sm:px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <RotateCcw className="w-4 h-4" />
-            Reset
+            <span className="hidden sm:inline">Reset</span>
           </button>
         </div>
       </div>

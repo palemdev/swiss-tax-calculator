@@ -19,7 +19,7 @@ export function BudgetLivingForm() {
             <Utensils className="w-4 h-4" />
             Food & Dining
           </h4>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <CurrencyInput
               label="Groceries"
               value={inputs.groceriesCost}
@@ -41,7 +41,7 @@ export function BudgetLivingForm() {
             <Wifi className="w-4 h-4" />
             Telecommunications
           </h4>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <CurrencyInput
               label="Phone plan"
               value={inputs.phonePlan}
@@ -71,7 +71,7 @@ export function BudgetLivingForm() {
             <Shield className="w-4 h-4" />
             Insurance (non-health)
           </h4>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <CurrencyInput
               label="Liability insurance"
               value={inputs.liabilityInsurance}

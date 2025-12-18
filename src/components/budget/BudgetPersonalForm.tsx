@@ -19,7 +19,7 @@ export function BudgetPersonalForm() {
             <Sparkles className="w-4 h-4" />
             Personal
           </h4>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <CurrencyInput
               label="Clothing"
               value={inputs.clothingBudget}
@@ -41,7 +41,7 @@ export function BudgetPersonalForm() {
             <PartyPopper className="w-4 h-4" />
             Entertainment
           </h4>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <CurrencyInput
               label="Entertainment"
               value={inputs.entertainmentBudget}
@@ -99,7 +99,7 @@ export function BudgetPersonalForm() {
         {showAdvancedInputs && (
           <div>
             <h4 className="text-sm font-medium text-gray-700 mb-3">Other</h4>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <CurrencyInput
                 label="Vacation budget"
                 value={inputs.vacationBudget}

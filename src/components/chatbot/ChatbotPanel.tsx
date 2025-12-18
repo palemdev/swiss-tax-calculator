@@ -41,8 +41,8 @@ export function ChatbotPanel() {
 
   return (
     <div
-      className="fixed bottom-24 right-6 w-96 max-h-[600px] bg-white rounded-xl shadow-2xl
-        border border-gray-200 flex flex-col z-50 animate-slideUp"
+      className="fixed inset-4 sm:inset-auto sm:bottom-24 sm:right-6 sm:w-96 sm:max-h-[600px]
+        bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col z-50 animate-slideUp"
       role="dialog"
       aria-label="Tax Expert Chat"
     >
@@ -79,7 +79,7 @@ export function ChatbotPanel() {
       </div>
 
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-[300px] max-h-[400px]">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
             <Bot size={48} className="text-gray-300 mb-3" />

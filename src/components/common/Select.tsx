@@ -34,7 +34,7 @@ export function Select({
         {tooltip && (
           <span className="group relative">
             <Info className="w-4 h-4 text-gray-400 cursor-help" />
-            <span className="absolute left-0 bottom-full mb-2 hidden group-hover:block w-64 p-2 text-xs bg-gray-900 text-white rounded shadow-lg z-10">
+            <span className="absolute left-0 bottom-full mb-2 hidden group-hover:block max-w-[min(16rem,calc(100vw-2rem))] w-max p-2 text-xs bg-gray-900 text-white rounded shadow-lg z-10">
               {tooltip}
             </span>
           </span>
