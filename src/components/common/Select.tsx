@@ -1,5 +1,6 @@
 
 import { Info } from 'lucide-react';
+import { useId } from 'react';
 
 interface Option {
   value: string;
@@ -25,9 +26,10 @@ export function Select({
   disabled = false,
   className = '',
 }: SelectProps) {
+  const id = useId();
   return (
     <div className={`mb-4 ${className}`}>
-      <label className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
+      <label htmlFor={id} className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
         {label}
         {tooltip && (
           <span className="group relative">
@@ -39,6 +41,7 @@ export function Select({
         )}
       </label>
       <select
+        id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}

@@ -1,6 +1,6 @@
 
 import { Info } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useId } from 'react';
 
 interface InputProps {
   label: string;
@@ -29,6 +29,7 @@ export function Input({
   className = '',
   placeholder,
 }: InputProps) {
+  const id = useId();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value;
     const numValue = parseFloat(rawValue) || 0;
@@ -39,7 +40,7 @@ export function Input({
 
   return (
     <div className={`mb-4 ${className}`}>
-      <label className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
+      <label htmlFor={id} className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
         {label}
         {tooltip && (
           <span className="group relative">
@@ -57,6 +58,7 @@ export function Input({
           </span>
         )}
         <input
+          id={id}
           type="number"
           value={displayValue}
           onChange={handleChange}
@@ -96,6 +98,7 @@ interface NumberInputProps {
 }
 
 export function NumberInput({ label, value, onChange, min = 0, max, tooltip, disabled }: NumberInputProps) {
+  const id = useId();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const numValue = parseInt(e.target.value, 10) || 0;
     onChange(numValue);
@@ -103,7 +106,7 @@ export function NumberInput({ label, value, onChange, min = 0, max, tooltip, dis
 
   return (
     <div className="mb-4">
-      <label className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
+      <label htmlFor={id} className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
         {label}
         {tooltip && (
           <span className="group relative">
@@ -115,6 +118,7 @@ export function NumberInput({ label, value, onChange, min = 0, max, tooltip, dis
         )}
       </label>
       <input
+        id={id}
         type="number"
         value={value}
         onChange={handleChange}
@@ -132,6 +136,7 @@ export function NumberInput({ label, value, onChange, min = 0, max, tooltip, dis
 }
 
 export function CurrencyInput({ label, value, onChange, tooltip, disabled }: CurrencyInputProps) {
+  const id = useId();
   const [displayValue, setDisplayValue] = useState('');
   const [, setIsFocused] = useState(false);
 
@@ -171,7 +176,7 @@ export function CurrencyInput({ label, value, onChange, tooltip, disabled }: Cur
 
   return (
     <div className="mb-4">
-      <label className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
+      <label htmlFor={id} className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
         {label}
         {tooltip && (
           <span className="group relative">
@@ -187,6 +192,7 @@ export function CurrencyInput({ label, value, onChange, tooltip, disabled }: Cur
           CHF
         </span>
         <input
+          id={id}
           type="text"
           inputMode="numeric"
           value={currentDisplayValue}
