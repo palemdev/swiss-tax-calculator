@@ -1,6 +1,6 @@
 import type { CantonalTaxConfig, Municipality } from '../../types';
-import { zugConfig, zugMunicipalities } from './zug';
-import { schwyzConfig, schwyzMunicipalities } from './schwyz';
+import { zugConfig, zugMunicipalities } from './zg';
+import { schwyzConfig, schwyzMunicipalities } from './sz';
 import { zurichConfig, zurichMunicipalities } from './zh';
 
 // All canton configurations
