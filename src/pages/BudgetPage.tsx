@@ -25,11 +25,11 @@ export function BudgetPage() {
   if (!taxResults) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-8 text-center">
-          <h2 className="text-xl font-semibold text-amber-800 mb-2">
+        <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 rounded-xl p-8 text-center">
+          <h2 className="text-xl font-semibold text-amber-800 dark:text-amber-400 mb-2">
             Calculate your taxes first
           </h2>
-          <p className="text-amber-700">
+          <p className="text-amber-700 dark:text-amber-300">
             The budget calculator uses your net income from the tax calculation.
             Please enter your income details on the Calculator tab first.
           </p>
@@ -66,13 +66,13 @@ export function BudgetPage() {
       </div>
 
       {/* Comparison Section */}
-      <div className="mt-12 border-t border-gray-200 pt-8">
+      <div className="mt-12 border-t border-gray-200 dark:border-gray-700 pt-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
               Compare Locations
             </h2>
-            <p className="text-gray-600 mt-1">
+            <p className="text-gray-600 dark:text-gray-400 mt-1">
               See how your budget changes across different cantons and municipalities
             </p>
           </div>
@@ -127,8 +127,8 @@ export function BudgetPage() {
             <BudgetComparisonTable />
           </div>
         ) : (
-          <div className="bg-gray-50 border border-gray-200 rounded-xl p-8 text-center">
-            <p className="text-gray-600">
+          <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-8 text-center">
+            <p className="text-gray-600 dark:text-gray-400">
               Click "Run Comparison" to compare your budget across all available locations.
               This considers both taxes and local cost of living differences.
             </p>

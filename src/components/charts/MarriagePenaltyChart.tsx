@@ -39,34 +39,34 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
     const isBonus = data.penalty < 0;
 
     return (
-      <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200 min-w-[200px]">
-        <p className="font-medium text-gray-900 border-b pb-2 mb-2">
+      <div className="bg-white dark:bg-gray-800 p-3 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 min-w-[200px]">
+        <p className="font-medium text-gray-900 dark:text-gray-100 border-b dark:border-gray-700 pb-2 mb-2">
           Household income: {formatCurrency(label ?? 0)}
         </p>
         <div className="space-y-1 text-sm">
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             <span className="inline-block w-3 h-3 rounded-full bg-emerald-500 mr-2"></span>
             2 Singles: {formatCurrency(data.singleTax)}
           </p>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             <span className="inline-block w-3 h-3 rounded-full bg-blue-500 mr-2"></span>
             Married: {formatCurrency(data.marriedTax)}
           </p>
-          <div className="border-t pt-2 mt-2">
+          <div className="border-t dark:border-gray-700 pt-2 mt-2">
             {isPenalty && (
-              <p className="text-red-600 font-medium">
+              <p className="text-red-600 dark:text-red-400 font-medium">
                 Marriage penalty: +{formatCurrency(data.penalty)}
                 <span className="text-xs ml-1">({data.penaltyPercent.toFixed(1)}% more)</span>
               </p>
             )}
             {isBonus && (
-              <p className="text-green-600 font-medium">
+              <p className="text-green-600 dark:text-green-400 font-medium">
                 Marriage bonus: {formatCurrency(data.penalty)}
                 <span className="text-xs ml-1">({Math.abs(data.penaltyPercent).toFixed(1)}% less)</span>
               </p>
             )}
             {!isPenalty && !isBonus && (
-              <p className="text-gray-500 font-medium">No difference</p>
+              <p className="text-gray-500 dark:text-gray-400 font-medium">No difference</p>
             )}
           </div>
         </div>
@@ -158,7 +158,7 @@ export function MarriagePenaltyChart() {
     >
       {/* Distribution selector */}
       <div className="mb-4 flex flex-wrap gap-2">
-        <span className="text-sm text-gray-600 self-center mr-2">Income distribution:</span>
+        <span className="text-sm text-gray-600 dark:text-gray-400 self-center mr-2">Income distribution:</span>
         {(['50-50', '70-30', '100-0'] as IncomeDistribution[]).map((dist) => (
           <button
             key={dist}
@@ -166,7 +166,7 @@ export function MarriagePenaltyChart() {
             className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
               distribution === dist
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
             {dist}
@@ -177,17 +177,17 @@ export function MarriagePenaltyChart() {
       {/* Stats summary */}
       <div className="grid grid-cols-2 gap-4 mb-4">
         {stats.maxBonus < 0 && (
-          <div className="bg-green-50 rounded-lg p-3">
-            <p className="text-xs text-green-600 font-medium">Max. marriage bonus</p>
-            <p className="text-lg font-bold text-green-700">{formatCurrency(Math.abs(stats.maxBonus))}</p>
-            <p className="text-xs text-green-600">at {formatCurrency(stats.maxBonusIncome)}</p>
+          <div className="bg-green-50 dark:bg-green-900/30 rounded-lg p-3">
+            <p className="text-xs text-green-600 dark:text-green-400 font-medium">Max. marriage bonus</p>
+            <p className="text-lg font-bold text-green-700 dark:text-green-400">{formatCurrency(Math.abs(stats.maxBonus))}</p>
+            <p className="text-xs text-green-600 dark:text-green-400">at {formatCurrency(stats.maxBonusIncome)}</p>
           </div>
         )}
         {stats.maxPenalty > 0 && (
-          <div className="bg-red-50 rounded-lg p-3">
-            <p className="text-xs text-red-600 font-medium">Max. marriage penalty</p>
-            <p className="text-lg font-bold text-red-700">{formatCurrency(stats.maxPenalty)}</p>
-            <p className="text-xs text-red-600">at {formatCurrency(stats.maxPenaltyIncome)}</p>
+          <div className="bg-red-50 dark:bg-red-900/30 rounded-lg p-3">
+            <p className="text-xs text-red-600 dark:text-red-400 font-medium">Max. marriage penalty</p>
+            <p className="text-lg font-bold text-red-700 dark:text-red-400">{formatCurrency(stats.maxPenalty)}</p>
+            <p className="text-xs text-red-600 dark:text-red-400">at {formatCurrency(stats.maxPenaltyIncome)}</p>
           </div>
         )}
       </div>
@@ -231,8 +231,8 @@ export function MarriagePenaltyChart() {
       </div>
 
       {/* Penalty/Bonus chart */}
-      <div className="border-t pt-4">
-        <p className="text-sm font-medium text-gray-700 mb-2">Difference (Penalty / Bonus)</p>
+      <div className="border-t dark:border-gray-700 pt-4">
+        <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Difference (Penalty / Bonus)</p>
         <div className="h-48">
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
@@ -286,8 +286,8 @@ export function MarriagePenaltyChart() {
       </div>
 
       {/* Explanation */}
-      <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-        <p className="text-xs text-gray-600">
+      <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+        <p className="text-xs text-gray-600 dark:text-gray-400">
           <strong>Marriage penalty:</strong> Married couples pay more federal tax than two singles with the same total income.
           This occurs especially when both partners have similar incomes (dual earners).
           With unequal distribution (e.g., single earner), married couples often benefit from the more favorable tariff.

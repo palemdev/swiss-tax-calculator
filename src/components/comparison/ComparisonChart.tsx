@@ -31,14 +31,14 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
   if (active && payload && payload.length) {
     const total = payload.reduce((sum: number, p) => sum + p.value, 0);
     return (
-      <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200">
-        <p className="font-medium text-gray-900 mb-2">{label}</p>
+      <div className="bg-white dark:bg-gray-800 p-3 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700">
+        <p className="font-medium text-gray-900 dark:text-gray-100 mb-2">{label}</p>
         {payload.map((entry, index: number) => (
           <p key={index} className="text-sm" style={{ color: entry.color }}>
             {entry.name}: {formatCurrency(entry.value)}
           </p>
         ))}
-        <p className="text-sm font-medium text-gray-900 mt-2 pt-2 border-t">
+        <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mt-2 pt-2 border-t dark:border-gray-700">
           Total: {formatCurrency(total)}
         </p>
       </div>
@@ -145,23 +145,23 @@ export function ComparisonChart() {
       <div className="flex justify-center flex-wrap gap-4 mt-4">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded" style={{ backgroundColor: TAX_COLORS.federal }} />
-          <span className="text-sm text-gray-600">Federal</span>
+          <span className="text-sm text-gray-600 dark:text-gray-400">Federal</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded" style={{ backgroundColor: TAX_COLORS.cantonal }} />
-          <span className="text-sm text-gray-600">Cantonal</span>
+          <span className="text-sm text-gray-600 dark:text-gray-400">Cantonal</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded" style={{ backgroundColor: TAX_COLORS.municipal }} />
-          <span className="text-sm text-gray-600">Municipal</span>
+          <span className="text-sm text-gray-600 dark:text-gray-400">Municipal</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded" style={{ backgroundColor: TAX_COLORS.church }} />
-          <span className="text-sm text-gray-600">Church</span>
+          <span className="text-sm text-gray-600 dark:text-gray-400">Church</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded" style={{ backgroundColor: TAX_COLORS.wealth }} />
-          <span className="text-sm text-gray-600">Wealth</span>
+          <span className="text-sm text-gray-600 dark:text-gray-400">Wealth</span>
         </div>
       </div>
     </Card>

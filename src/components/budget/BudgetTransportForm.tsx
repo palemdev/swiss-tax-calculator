@@ -47,8 +47,8 @@ export function BudgetTransportForm() {
         )}
 
         {!inputs.hasPublicTransportPass && !inputs.hasCar && (
-          <div className="p-3 bg-green-50 rounded-lg border border-green-100">
-            <p className="text-sm text-green-700">
+          <div className="p-3 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-100 dark:border-green-800">
+            <p className="text-sm text-green-700 dark:text-green-300">
               <Train className="w-4 h-4 inline mr-1" />
               No regular transport costs. Consider if you need occasional tickets.
             </p>

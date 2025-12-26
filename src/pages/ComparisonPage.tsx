@@ -42,48 +42,48 @@ export function ComparisonPage() {
       {/* Comparison Stats */}
       {comparisonResults.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <Card className="bg-green-50 border-green-200">
+          <Card className="bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800">
             <div className="text-center">
-              <p className="text-sm font-medium text-green-800">Cheapest Location</p>
-              <p className="text-2xl font-bold text-green-700 mt-1">
+              <p className="text-sm font-medium text-green-800 dark:text-green-400">Cheapest Location</p>
+              <p className="text-2xl font-bold text-green-700 dark:text-green-400 mt-1">
                 {bestLocation?.municipalityName} ({bestLocation?.canton})
               </p>
-              <p className="text-lg text-green-600 mt-1">
+              <p className="text-lg text-green-600 dark:text-green-400 mt-1">
                 {formatCurrency(bestLocation?.taxBreakdown.totalTax || 0)}
               </p>
-              <p className="text-sm text-green-600">
+              <p className="text-sm text-green-600 dark:text-green-400">
                 {formatPercentage(bestLocation?.taxBreakdown.effectiveRate || 0)} effective rate
               </p>
             </div>
           </Card>
 
-          <Card className="bg-blue-50 border-blue-200">
+          <Card className="bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800">
             <div className="text-center">
-              <p className="text-sm font-medium text-blue-800">Potential Savings</p>
-              <p className="text-2xl font-bold text-blue-700 mt-1">
+              <p className="text-sm font-medium text-blue-800 dark:text-blue-400">Potential Savings</p>
+              <p className="text-2xl font-bold text-blue-700 dark:text-blue-400 mt-1">
                 {formatCurrency(potentialSavings)}
               </p>
-              <p className="text-sm text-blue-600 mt-1">
+              <p className="text-sm text-blue-600 dark:text-blue-400 mt-1">
                 per year by moving to {bestLocation?.municipalityName}
               </p>
               {currentLocation && (
-                <p className="text-sm text-blue-600">
+                <p className="text-sm text-blue-600 dark:text-blue-400">
                   Your current rank: #{currentLocation.ranking} of {comparisonResults.length}
                 </p>
               )}
             </div>
           </Card>
 
-          <Card className="bg-red-50 border-red-200">
+          <Card className="bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800">
             <div className="text-center">
-              <p className="text-sm font-medium text-red-800">Most Expensive</p>
-              <p className="text-2xl font-bold text-red-700 mt-1">
+              <p className="text-sm font-medium text-red-800 dark:text-red-400">Most Expensive</p>
+              <p className="text-2xl font-bold text-red-700 dark:text-red-400 mt-1">
                 {worstLocation?.municipalityName} ({worstLocation?.canton})
               </p>
-              <p className="text-lg text-red-600 mt-1">
+              <p className="text-lg text-red-600 dark:text-red-400 mt-1">
                 {formatCurrency(worstLocation?.taxBreakdown.totalTax || 0)}
               </p>
-              <p className="text-sm text-red-600">
+              <p className="text-sm text-red-600 dark:text-red-400">
                 +{formatCurrency(
                   (worstLocation?.taxBreakdown.totalTax || 0) - (bestLocation?.taxBreakdown.totalTax || 0)
                 )} vs cheapest
@@ -106,9 +106,9 @@ export function ComparisonPage() {
       </div>
 
       {/* Info Box */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8 flex items-start gap-3">
-        <AlertCircle className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-        <div className="text-sm text-blue-800">
+      <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-8 flex items-start gap-3">
+        <AlertCircle className="w-5 h-5 text-blue-500 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+        <div className="text-sm text-blue-800 dark:text-blue-300">
           <p className="font-medium">About this comparison</p>
           <p className="mt-1">
             This comparison uses your current income and deduction settings to calculate taxes

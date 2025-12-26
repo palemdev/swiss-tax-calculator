@@ -42,26 +42,26 @@ export function ChatbotPanel() {
   return (
     <div
       className="fixed inset-4 sm:inset-auto sm:bottom-24 sm:right-6 sm:w-96 sm:max-h-[600px]
-        bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col z-50 animate-slideUp"
+        bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col z-50 animate-slideUp"
       role="dialog"
       aria-label="Tax Expert Chat"
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-gray-50 rounded-t-xl">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 rounded-t-xl">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
-            <Bot size={18} className="text-red-600" />
+          <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/50 flex items-center justify-center">
+            <Bot size={18} className="text-red-600 dark:text-red-400" />
           </div>
           <div>
-            <h2 className="font-semibold text-gray-900">Tax Expert</h2>
-            <p className="text-xs text-gray-500">Ask about Swiss taxes</p>
+            <h2 className="font-semibold text-gray-900 dark:text-gray-100">Tax Expert</h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400">Ask about Swiss taxes</p>
           </div>
         </div>
         <div className="flex items-center gap-1">
           {messages.length > 0 && (
             <button
               onClick={clearMessages}
-              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors"
               aria-label="Clear chat history"
               title="Clear chat"
             >
@@ -70,7 +70,7 @@ export function ChatbotPanel() {
           )}
           <button
             onClick={closePanel}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors"
             aria-label="Close chat"
           >
             <X size={18} />
@@ -81,28 +81,28 @@ export function ChatbotPanel() {
       {/* Messages area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
-            <Bot size={48} className="text-gray-300 mb-3" />
-            <p className="font-medium text-gray-600">Welcome to Tax Expert!</p>
+          <div className="flex flex-col items-center justify-center h-full text-center text-gray-500 dark:text-gray-400">
+            <Bot size={48} className="text-gray-300 dark:text-gray-600 mb-3" />
+            <p className="font-medium text-gray-600 dark:text-gray-300">Welcome to Tax Expert!</p>
             <p className="text-sm mt-1">
               Ask me anything about Swiss taxes, deductions, or your calculation.
             </p>
             <div className="mt-4 space-y-2 text-sm">
               <button
                 onClick={() => sendMessage('Why is my tax so high?')}
-                className="block w-full px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-left"
+                className="block w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors text-left text-gray-700 dark:text-gray-300"
               >
                 💡 Why is my tax so high?
               </button>
               <button
                 onClick={() => sendMessage('What deductions am I missing?')}
-                className="block w-full px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-left"
+                className="block w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors text-left text-gray-700 dark:text-gray-300"
               >
                 📋 What deductions am I missing?
               </button>
               <button
                 onClick={() => sendMessage('How does Pillar 3a work?')}
-                className="block w-full px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-left"
+                className="block w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors text-left text-gray-700 dark:text-gray-300"
               >
                 🏦 How does Pillar 3a work?
               </button>
@@ -115,14 +115,14 @@ export function ChatbotPanel() {
             ))}
             {isLoading && (
               <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                  <Bot size={16} className="text-gray-600" />
+                <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
+                  <Bot size={16} className="text-gray-600 dark:text-gray-400" />
                 </div>
-                <div className="bg-gray-100 rounded-lg px-4 py-3">
+                <div className="bg-gray-100 dark:bg-gray-700 rounded-lg px-4 py-3">
                   <div className="flex gap-1">
-                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
-                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:0.1s]" />
-                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:0.2s]" />
+                    <span className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" />
+                    <span className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce [animation-delay:0.1s]" />
+                    <span className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce [animation-delay:0.2s]" />
                   </div>
                 </div>
               </div>
@@ -134,13 +134,13 @@ export function ChatbotPanel() {
 
       {/* Error display */}
       {error && (
-        <div className="px-4 py-2 bg-red-50 border-t border-red-200">
-          <div className="flex items-center gap-2 text-red-600 text-sm">
+        <div className="px-4 py-2 bg-red-50 dark:bg-red-900/30 border-t border-red-200 dark:border-red-800">
+          <div className="flex items-center gap-2 text-red-600 dark:text-red-400 text-sm">
             <AlertCircle size={16} />
             <span className="flex-1">{error}</span>
             <button
               onClick={clearError}
-              className="text-red-400 hover:text-red-600"
+              className="text-red-400 hover:text-red-600 dark:hover:text-red-300"
               aria-label="Dismiss error"
             >
               <X size={14} />

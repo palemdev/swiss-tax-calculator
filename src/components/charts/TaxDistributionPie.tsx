@@ -22,10 +22,10 @@ function CustomTooltip({ active, payload, totalTax }: CustomTooltipProps) {
     const { name, value } = payload[0].payload;
     const percentage = (value / totalTax) * 100;
     return (
-      <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200">
-        <p className="font-medium text-gray-900">{name} Tax</p>
-        <p className="text-gray-600">{formatCurrency(value)}</p>
-        <p className="text-sm text-gray-500">{formatPercentage(percentage)} of total</p>
+      <div className="bg-white dark:bg-gray-800 p-3 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700">
+        <p className="font-medium text-gray-900 dark:text-gray-100">{name} Tax</p>
+        <p className="text-gray-600 dark:text-gray-300">{formatCurrency(value)}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">{formatPercentage(percentage)} of total</p>
       </div>
     );
   }
@@ -52,7 +52,7 @@ function renderLegend(props: LegendPropsCustom) {
             className="w-3 h-3 rounded-full"
             style={{ backgroundColor: entry.color }}
           />
-          <span className="text-sm text-gray-600">{entry.value}</span>
+          <span className="text-sm text-gray-600 dark:text-gray-400">{entry.value}</span>
         </li>
       ))}
     </ul>
@@ -65,7 +65,7 @@ export function TaxDistributionPie() {
   if (!results || results.totalTax === 0) {
     return (
       <Card title="Tax Distribution">
-        <div className="h-64 flex items-center justify-center text-gray-500">
+        <div className="h-64 flex items-center justify-center text-gray-500 dark:text-gray-400">
           No tax data to display
         </div>
       </Card>
@@ -124,10 +124,10 @@ export function TaxDistributionPie() {
         </ResponsiveContainer>
       </div>
       <div className="text-center mt-2">
-        <span className="text-2xl font-bold text-gray-900">
+        <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">
           {formatCurrency(results.totalTax)}
         </span>
-        <span className="text-gray-500 ml-2">total tax</span>
+        <span className="text-gray-500 dark:text-gray-400 ml-2">total tax</span>
       </div>
     </Card>
   );

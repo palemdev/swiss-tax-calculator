@@ -55,15 +55,15 @@ export function BudgetComparisonChart() {
     if (active && payload && payload.length) {
       const data = payload[0]?.payload;
       return (
-        <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200">
-          <p className="font-medium text-gray-900 mb-2">{label}</p>
-          <p className="text-sm text-green-600">
+        <div className="bg-white dark:bg-gray-800 p-3 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700">
+          <p className="font-medium text-gray-900 dark:text-gray-100 mb-2">{label}</p>
+          <p className="text-sm text-green-600 dark:text-green-400">
             Disposable: {formatCurrency(data.disposable)}/mo
           </p>
-          <p className="text-sm text-blue-600">
+          <p className="text-sm text-blue-600 dark:text-blue-400">
             Tax: {formatCurrency(data.tax)}/mo
           </p>
-          <p className="text-sm text-amber-600">
+          <p className="text-sm text-amber-600 dark:text-amber-400">
             Living cost: {formatCurrency(data.livingCost)}/mo
           </p>
         </div>
@@ -132,7 +132,7 @@ export function BudgetComparisonChart() {
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <p className="text-sm text-gray-500 text-center mt-4">
+      <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-4">
         Disposable income = Net income - Taxes - Estimated living costs
       </p>
     </Card>

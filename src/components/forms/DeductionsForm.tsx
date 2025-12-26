@@ -32,10 +32,10 @@ export function DeductionsForm() {
             onClick={() => toggleDeductions()}
             className="flex items-center gap-1.5"
           >
-            <span className="text-xs text-gray-500">{enableDeductions ? 'On' : 'Off'}</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">{enableDeductions ? 'On' : 'Off'}</span>
             <div
               className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
-                enableDeductions ? 'bg-red-500' : 'bg-gray-300'
+                enableDeductions ? 'bg-red-500' : 'bg-gray-300 dark:bg-gray-600'
               }`}
             >
               <span
@@ -49,7 +49,7 @@ export function DeductionsForm() {
       }
     >
       {!enableDeductions && (
-        <p className="text-sm text-gray-500 italic">
+        <p className="text-sm text-gray-500 dark:text-gray-400 italic">
           Enable deductions to configure tax deductions and reduce taxable income.
         </p>
       )}
@@ -58,7 +58,7 @@ export function DeductionsForm() {
         <>
       {/* Professional Expenses */}
       <div className="mb-6">
-        <h4 className="text-sm font-semibold text-gray-700 mb-3 pb-2 border-b">
+        <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
           Professional Expenses
         </h4>
         <Toggle
@@ -94,7 +94,7 @@ export function DeductionsForm() {
 
       {/* Insurance Premiums */}
       <div className="mb-6">
-        <h4 className="text-sm font-semibold text-gray-700 mb-3 pb-2 border-b">
+        <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
           Insurance Premiums
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
@@ -115,7 +115,7 @@ export function DeductionsForm() {
 
       {/* Pension Contributions */}
       <div className="mb-6">
-        <h4 className="text-sm font-semibold text-gray-700 mb-3 pb-2 border-b">
+        <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
           Pension Contributions
         </h4>
         <Toggle
@@ -142,7 +142,7 @@ export function DeductionsForm() {
 
       {/* Family & Personal Deductions */}
       <div className="mb-6">
-        <h4 className="text-sm font-semibold text-gray-700 mb-3 pb-2 border-b">
+        <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
           Family & Personal
         </h4>
         {hasSelfCareDeduction && taxpayer.childrenInChildcare > 0 && (
@@ -197,7 +197,7 @@ export function DeductionsForm() {
 
       {/* Other Deductions */}
       <div className="mb-6">
-        <h4 className="text-sm font-semibold text-gray-700 mb-3 pb-2 border-b">
+        <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
           Other Deductions
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">

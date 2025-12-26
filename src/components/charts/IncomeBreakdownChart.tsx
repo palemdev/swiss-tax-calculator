@@ -28,9 +28,9 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
   if (active && payload && payload.length) {
     const { name, value } = payload[0].payload;
     return (
-      <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200">
-        <p className="font-medium text-gray-900">{name}</p>
-        <p className="text-gray-600">{formatCurrency(value)}</p>
+      <div className="bg-white dark:bg-gray-800 p-3 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700">
+        <p className="font-medium text-gray-900 dark:text-gray-100">{name}</p>
+        <p className="text-gray-600 dark:text-gray-300">{formatCurrency(value)}</p>
       </div>
     );
   }
@@ -43,7 +43,7 @@ export function IncomeBreakdownChart() {
   if (!results) {
     return (
       <Card title="Income Breakdown">
-        <div className="h-48 flex items-center justify-center text-gray-500">
+        <div className="h-48 flex items-center justify-center text-gray-500 dark:text-gray-400">
           No data to display
         </div>
       </Card>

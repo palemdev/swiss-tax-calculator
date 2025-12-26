@@ -26,7 +26,7 @@ interface CategoryRowProps {
 
 function CategoryRow({ icon, label, amount, percentage, color, details }: CategoryRowProps) {
   return (
-    <div className="py-3 border-b border-gray-100 last:border-0">
+    <div className="py-3 border-b border-gray-100 dark:border-gray-700 last:border-0">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div
@@ -35,11 +35,11 @@ function CategoryRow({ icon, label, amount, percentage, color, details }: Catego
           >
             {icon}
           </div>
-          <span className="font-medium text-gray-900">{label}</span>
+          <span className="font-medium text-gray-900 dark:text-gray-100">{label}</span>
         </div>
         <div className="text-right">
-          <span className="font-semibold text-gray-900">{formatCurrency(amount)}</span>
-          <span className="text-sm text-gray-500 ml-2">({formatPercentage(percentage)})</span>
+          <span className="font-semibold text-gray-900 dark:text-gray-100">{formatCurrency(amount)}</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">({formatPercentage(percentage)})</span>
         </div>
       </div>
       {details && details.length > 0 && (
@@ -47,7 +47,7 @@ function CategoryRow({ icon, label, amount, percentage, color, details }: Catego
           {details
             .filter((d) => d.amount > 0)
             .map((detail) => (
-              <div key={detail.label} className="flex justify-between text-sm text-gray-500">
+              <div key={detail.label} className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
                 <span>{detail.label}</span>
                 <span>{formatCurrency(detail.amount)}</span>
               </div>
@@ -64,7 +64,7 @@ export function BudgetBreakdownCard() {
   if (!results) {
     return (
       <Card title="Budget Breakdown" subtitle="Monthly expenses by category">
-        <p className="text-gray-500 text-center py-8">
+        <p className="text-gray-500 dark:text-gray-400 text-center py-8">
           Enter your tax details to see budget breakdown
         </p>
       </Card>
@@ -78,7 +78,7 @@ export function BudgetBreakdownCard() {
 
   return (
     <Card title="Budget Breakdown" subtitle="Monthly expenses by category">
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-gray-100 dark:divide-gray-700">
         <CategoryRow
           icon={<Home className="w-4 h-4" style={{ color: BUDGET_COLORS.housing }} />}
           label="Housing"
@@ -177,8 +177,8 @@ export function BudgetBreakdownCard() {
       </div>
 
       {/* Total */}
-      <div className="mt-4 pt-4 border-t-2 border-gray-200">
-        <div className="flex items-center justify-between text-lg font-bold">
+      <div className="mt-4 pt-4 border-t-2 border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between text-lg font-bold text-gray-900 dark:text-gray-100">
           <span>Total Monthly Expenses</span>
           <span>{formatCurrency(results.monthlyExpenses)}</span>
         </div>

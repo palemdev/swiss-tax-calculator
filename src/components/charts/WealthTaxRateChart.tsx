@@ -31,8 +31,8 @@ interface CustomTooltipProps {
 function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200">
-        <p className="font-medium text-gray-900">
+      <div className="bg-white dark:bg-gray-800 p-3 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700">
+        <p className="font-medium text-gray-900 dark:text-gray-100">
           Wealth: {formatCurrency(label ?? 0)}
         </p>
         {payload.map((entry, index: number) => (
@@ -156,7 +156,7 @@ export function WealthTaxRateChart() {
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <p className="text-xs text-gray-500 mt-2">
+      <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
         Rate shown is total tax (base rate × cantonal + municipal multipliers) divided by wealth.
         Starts at 0 due to tax-free allowance, then approaches the maximum effective rate.
       </p>

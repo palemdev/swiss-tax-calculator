@@ -65,13 +65,13 @@ export function BudgetHousingForm() {
         />
 
         {estimatedRent && !useCustomRent && (
-          <div className="p-3 bg-blue-50 rounded-lg border border-blue-100">
-            <p className="text-sm text-blue-700">
+          <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-100 dark:border-blue-800">
+            <p className="text-sm text-blue-700 dark:text-blue-300">
               <Building2 className="w-4 h-4 inline mr-1" />
               Estimated rent for {taxpayer.canton}:{' '}
               <span className="font-semibold">{formatCurrency(estimatedRent)}/mo</span>
             </p>
-            <p className="text-xs text-blue-600 mt-1">
+            <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
               + ~{formatCurrency(estimatedUtilities)}/mo utilities
             </p>
           </div>

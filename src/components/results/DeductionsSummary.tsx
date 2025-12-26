@@ -21,10 +21,10 @@ function DeductionCategory({ title, total, items, marginalRate, defaultExpanded 
   const taxSavings = total * (marginalRate / 100);
 
   return (
-    <div className="border-b border-gray-100 last:border-0">
+    <div className="border-b border-gray-100 dark:border-gray-700 last:border-0">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between py-2 text-left hover:bg-gray-50 -mx-2 px-2 rounded"
+        className="w-full flex items-center justify-between py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 -mx-2 px-2 rounded"
       >
         <div className="flex items-center gap-2">
           {expanded ? (
@@ -32,11 +32,11 @@ function DeductionCategory({ title, total, items, marginalRate, defaultExpanded 
           ) : (
             <ChevronRight className="w-4 h-4 text-gray-400" />
           )}
-          <span className="text-sm font-medium text-gray-700">{title}</span>
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{title}</span>
         </div>
         <div className="text-right">
-          <span className="text-sm font-medium text-green-600">{formatCurrency(total)}</span>
-          <span className="text-xs text-gray-500 ml-2">(-{formatCurrency(taxSavings)})</span>
+          <span className="text-sm font-medium text-green-600 dark:text-green-400">{formatCurrency(total)}</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">(-{formatCurrency(taxSavings)})</span>
         </div>
       </button>
 
@@ -45,11 +45,11 @@ function DeductionCategory({ title, total, items, marginalRate, defaultExpanded 
           {items.filter(item => item.amount > 0).map((item, index) => {
             const itemSavings = item.amount * (marginalRate / 100);
             return (
-              <div key={index} className="flex justify-between text-xs text-gray-600">
+              <div key={index} className="flex justify-between text-xs text-gray-600 dark:text-gray-400">
                 <span>{item.label}</span>
                 <div>
                   <span>{formatCurrency(item.amount)}</span>
-                  <span className="text-gray-400 ml-2">(-{formatCurrency(itemSavings)})</span>
+                  <span className="text-gray-400 dark:text-gray-500 ml-2">(-{formatCurrency(itemSavings)})</span>
                 </div>
               </div>
             );
@@ -72,7 +72,7 @@ function DeductionSection({ title, deductions, marginalRate, color }: DeductionS
 
   return (
     <div className="mb-4">
-      <div className={`text-sm font-semibold ${color} mb-2 pb-1 border-b`}>
+      <div className={`text-sm font-semibold ${color} mb-2 pb-1 border-b border-gray-200 dark:border-gray-700`}>
         {title}
       </div>
 
@@ -147,11 +147,11 @@ function DeductionSection({ title, deductions, marginalRate, color }: DeductionS
         marginalRate={marginalRate}
       />
 
-      <div className="flex justify-between text-sm mt-2 pt-2 border-t border-gray-100">
-        <span className="text-gray-700 font-medium">Subtotal</span>
+      <div className="flex justify-between text-sm mt-2 pt-2 border-t border-gray-100 dark:border-gray-700">
+        <span className="text-gray-700 dark:text-gray-300 font-medium">Subtotal</span>
         <div>
-          <span className="text-green-600 font-medium">{formatCurrency(deductions.totalDeductions)}</span>
-          <span className="text-xs text-gray-500 ml-2">(-{formatCurrency(totalTaxSavings)})</span>
+          <span className="text-green-600 dark:text-green-400 font-medium">{formatCurrency(deductions.totalDeductions)}</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">(-{formatCurrency(totalTaxSavings)})</span>
         </div>
       </div>
     </div>
@@ -164,7 +164,7 @@ export function DeductionsSummary() {
   if (!results) {
     return (
       <Card title="Deductions Summary">
-        <p className="text-gray-500 text-center py-8">
+        <p className="text-gray-500 dark:text-gray-400 text-center py-8">
           Enter your details to see deduction breakdown
         </p>
       </Card>
@@ -197,18 +197,18 @@ export function DeductionsSummary() {
         color="text-purple-600"
       />
 
-      <div className="pt-3 mt-2 border-t-2 border-gray-200 space-y-1">
+      <div className="pt-3 mt-2 border-t-2 border-gray-200 dark:border-gray-600 space-y-1">
         <div className="flex justify-between">
-          <span className="text-gray-700">Total Federal Deductions</span>
-          <span className="text-green-600">{formatCurrency(deductionsFederal.totalDeductions)}</span>
+          <span className="text-gray-700 dark:text-gray-300">Total Federal Deductions</span>
+          <span className="text-green-600 dark:text-green-400">{formatCurrency(deductionsFederal.totalDeductions)}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-700">Total Cantonal Deductions</span>
-          <span className="text-green-600">{formatCurrency(deductions.totalDeductions)}</span>
+          <span className="text-gray-700 dark:text-gray-300">Total Cantonal Deductions</span>
+          <span className="text-green-600 dark:text-green-400">{formatCurrency(deductions.totalDeductions)}</span>
         </div>
         <div className="flex justify-between font-semibold pt-2">
-          <span className="text-gray-900">Estimated Tax Savings</span>
-          <span className="text-green-600">-{formatCurrency(totalTaxSavings)}</span>
+          <span className="text-gray-900 dark:text-gray-100">Estimated Tax Savings</span>
+          <span className="text-green-600 dark:text-green-400">-{formatCurrency(totalTaxSavings)}</span>
         </div>
       </div>
     </Card>

@@ -40,12 +40,12 @@ export function Input({
 
   return (
     <div className={`mb-4 ${className}`}>
-      <label htmlFor={id} className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
+      <label htmlFor={id} className="flex items-center gap-1 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
         {label}
         {tooltip && (
           <span className="group relative">
             <Info className="w-4 h-4 text-gray-400 cursor-help" />
-            <span className="absolute left-0 bottom-full mb-2 hidden group-hover:block max-w-[min(16rem,calc(100vw-2rem))] w-max p-2 text-xs bg-gray-900 text-white rounded shadow-lg z-10">
+            <span className="absolute left-0 bottom-full mb-2 hidden group-hover:block max-w-[min(16rem,calc(100vw-2rem))] w-max p-2 text-xs bg-gray-900 dark:bg-gray-700 text-white rounded shadow-lg z-10">
               {tooltip}
             </span>
           </span>
@@ -53,7 +53,7 @@ export function Input({
       </label>
       <div className="relative">
         {type === 'currency' && (
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 text-sm">
             CHF
           </span>
         )}
@@ -68,9 +68,11 @@ export function Input({
           disabled={disabled}
           placeholder={placeholder}
           className={`
-            w-full px-3 py-2 border border-gray-300 rounded-lg
+            w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
+            bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100
             focus:ring-2 focus:ring-red-500 focus:border-red-500
-            disabled:bg-gray-100 disabled:cursor-not-allowed
+            disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:cursor-not-allowed
+            placeholder:text-gray-400 dark:placeholder:text-gray-500
             ${type === 'currency' ? 'pl-12' : ''}
           `}
         />
@@ -106,12 +108,12 @@ export function NumberInput({ label, value, onChange, min = 0, max, tooltip, dis
 
   return (
     <div className="mb-4">
-      <label htmlFor={id} className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
+      <label htmlFor={id} className="flex items-center gap-1 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
         {label}
         {tooltip && (
           <span className="group relative">
             <Info className="w-4 h-4 text-gray-400 cursor-help" />
-            <span className="absolute left-0 bottom-full mb-2 hidden group-hover:block max-w-[min(16rem,calc(100vw-2rem))] w-max p-2 text-xs bg-gray-900 text-white rounded shadow-lg z-10">
+            <span className="absolute left-0 bottom-full mb-2 hidden group-hover:block max-w-[min(16rem,calc(100vw-2rem))] w-max p-2 text-xs bg-gray-900 dark:bg-gray-700 text-white rounded shadow-lg z-10">
               {tooltip}
             </span>
           </span>
@@ -126,9 +128,10 @@ export function NumberInput({ label, value, onChange, min = 0, max, tooltip, dis
         max={max}
         disabled={disabled}
         className="
-          w-full px-3 py-2 border border-gray-300 rounded-lg
+          w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
+          bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100
           focus:ring-2 focus:ring-red-500 focus:border-red-500
-          disabled:bg-gray-100 disabled:cursor-not-allowed
+          disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:cursor-not-allowed
         "
       />
     </div>
@@ -176,19 +179,19 @@ export function CurrencyInput({ label, value, onChange, tooltip, disabled }: Cur
 
   return (
     <div className="mb-4">
-      <label htmlFor={id} className="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
+      <label htmlFor={id} className="flex items-center gap-1 text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
         {label}
         {tooltip && (
           <span className="group relative">
             <Info className="w-4 h-4 text-gray-400 cursor-help" />
-            <span className="absolute left-0 bottom-full mb-2 hidden group-hover:block max-w-[min(16rem,calc(100vw-2rem))] w-max p-2 text-xs bg-gray-900 text-white rounded shadow-lg z-10">
+            <span className="absolute left-0 bottom-full mb-2 hidden group-hover:block max-w-[min(16rem,calc(100vw-2rem))] w-max p-2 text-xs bg-gray-900 dark:bg-gray-700 text-white rounded shadow-lg z-10">
               {tooltip}
             </span>
           </span>
         )}
       </label>
       <div className="relative">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 text-sm">
           CHF
         </span>
         <input
@@ -201,9 +204,10 @@ export function CurrencyInput({ label, value, onChange, tooltip, disabled }: Cur
           onBlur={handleBlur}
           disabled={disabled}
           className="
-            w-full px-3 py-2 border border-gray-300 rounded-lg
+            w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
+            bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100
             focus:ring-2 focus:ring-red-500 focus:border-red-500
-            disabled:bg-gray-100 disabled:cursor-not-allowed
+            disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:cursor-not-allowed
             pl-12
           "
         />
